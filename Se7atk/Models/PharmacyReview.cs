@@ -1,0 +1,16 @@
+﻿namespace Se7atk.Models
+{
+    public class PharmacyReview
+    {
+        public Guid Id { get; set; }
+        public Guid PatientId { get; set; }
+        public Guid PharmacyId { get; set; }
+        public int Rating { get; set; }
+        public string? Comment { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        // Navigation
+        public PatientProfile Patient { get; set; } = null!;
+        public Pharmacy Pharmacy { get; set; } = null!;
+    }
+}

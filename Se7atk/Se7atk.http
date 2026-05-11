@@ -1,0 +1,6 @@
+@Se7atk_HostAddress = http://localhost:5116
+
+GET {{Se7atk_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
