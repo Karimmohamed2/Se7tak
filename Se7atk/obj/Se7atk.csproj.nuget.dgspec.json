@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Se7atk\\Se7atk\\Se7atk.csproj": {}
+    "D:\\c#\\ProjectDepi\\Se7atk\\Se7atk.csproj": {}
   },
   "projects": {
-    "G:\\Se7atk\\Se7atk\\Se7atk.csproj": {
+    "D:\\c#\\ProjectDepi\\Se7atk\\Se7atk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Se7atk\\Se7atk\\Se7atk.csproj",
+        "projectUniqueName": "D:\\c#\\ProjectDepi\\Se7atk\\Se7atk.csproj",
         "projectName": "Se7atk",
-        "projectPath": "G:\\Se7atk\\Se7atk\\Se7atk.csproj",
-        "packagesPath": "C:\\Users\\Sohila\\.nuget\\packages\\",
-        "outputPath": "G:\\Se7atk\\Se7atk\\obj\\",
+        "projectPath": "D:\\c#\\ProjectDepi\\Se7atk\\Se7atk.csproj",
+        "packagesPath": "C:\\Users\\dell\\.nuget\\packages\\",
+        "outputPath": "D:\\c#\\ProjectDepi\\Se7atk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Sohila\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -50,15 +50,27 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.8, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.7, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[6.1.1, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.7, )"
+              "version": "[10.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -69,6 +81,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[10.0.7, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[10.1.7, )"
             }
           },
           "imports": [

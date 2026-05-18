@@ -1,0 +1,65 @@
+# =====================
+# ASP.NET Core Backend
+# =====================
+**/[Bb]in/
+**/[Oo]bj/
+**/[Ll]og/
+**/[Ll]ogs/
+**/.vs/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/.vscode/
+**/.idea/
+
+# Secrets & Config
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.json
+!**/appsettings.json
+**/secrets.json
+
+# Entity Framework
+**/Migrations/*Designer.cs
+**/Migrations/*Snapshot.cs
+# Keep the actual migration files, ignore designer/snapshot noise if you want
+# But usually we keep all migrations, so commented out:
+# **/Migrations/
+
+# Database Files
+**/*.mdf
+**/*.ldf
+**/*.ndf
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+
+# =====================
+# Frontend (Vanilla JS)
+# =====================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.cache/
+frontend/.env
+frontend/.env.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# =====================
+# General
+# =====================
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =====================
+# GitHub specific
+# =====================
+!.github/
