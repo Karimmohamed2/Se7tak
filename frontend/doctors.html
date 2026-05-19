@@ -70,7 +70,7 @@
                     <div class="position-relative">
                         <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y ms-3 text-muted"></i>
                         <input type="text" class="form-control form-control-lg pe-5" id="nameSearch" 
-                               placeholder="ابحث باسم الطبيب أو التخصص..." oninput="debouncedSearch()">
+                               placeholder="ابحث باسم الطبيب أو التخصص...">
                     </div>
                 </div>
             </div>
@@ -83,7 +83,6 @@
             <div class="row g-4">
                 <!-- Sidebar Filters -->
                 <div class="col-lg-3">
-                    <!-- Mobile Filter Toggle -->
                     <button class="btn btn-outline-primary w-100 d-lg-none mb-3 rounded-pill" type="button" 
                             data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
                         <i class="bi bi-sliders me-2"></i>الفلاتر
@@ -100,7 +99,7 @@
                                 <!-- Specialty -->
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">التخصص</label>
-                                    <select class="form-select" id="filterSpecialty" onchange="applyFilters()">
+                                    <select class="form-select" id="filterSpecialty">
                                         <option value="">كل التخصصات</option>
                                     </select>
                                 </div>
@@ -108,7 +107,7 @@
                                 <!-- City -->
                                 <div class="mb-4">
                                     <label class="form-label fw-semibold">المدينة</label>
-                                    <select class="form-select" id="filterCity" onchange="applyFilters()">
+                                    <select class="form-select" id="filterCity">
                                         <option value="">كل المدن</option>
                                     </select>
                                 </div>
@@ -119,8 +118,7 @@
                                         <label class="form-label fw-semibold mb-0">سعر الكشف</label>
                                         <span class="text-primary fw-bold" id="priceValue">حتى 1000 ج.م</span>
                                     </div>
-                                    <input type="range" class="form-range" id="priceRange" min="50" max="1000" step="50" 
-                                           value="1000" oninput="updatePriceLabel(); debouncedSearch()">
+                                    <input type="range" class="form-range" id="priceRange" min="50" max="1000" step="50" value="1000">
                                     <div class="d-flex justify-content-between text-muted small">
                                         <span>50 ج.م</span>
                                         <span>1000 ج.م</span>
@@ -134,21 +132,17 @@
                                         سنوات الخبرة
                                     </label>
                                     <div class="d-flex gap-2 flex-wrap">
-                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn active" 
-                                                data-value="0" onclick="setExperience(0)">الكل</button>
-                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" 
-                                                data-value="5" onclick="setExperience(5)">5+</button>
-                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" 
-                                                data-value="10" onclick="setExperience(10)">10+</button>
-                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" 
-                                                data-value="15" onclick="setExperience(15)">15+</button>
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn active" data-value="0">الكل</button>
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" data-value="5">5+</button>
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" data-value="10">10+</button>
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill experience-btn" data-value="15">15+</button>
                                     </div>
                                 </div>
                                 
                                 <!-- Sort -->
                                 <div>
                                     <label class="form-label fw-semibold">الترتيب</label>
-                                    <select class="form-select" id="sortBy" onchange="applyFilters()">
+                                    <select class="form-select" id="sortBy">
                                         <option value="experience">الأكثر خبرة</option>
                                         <option value="price_asc">السعر: الأقل أولاً</option>
                                         <option value="price_desc">السعر: الأعلى أولاً</option>
@@ -163,21 +157,21 @@
                 <div class="col-lg-9">
                     <!-- Sort Bar (Mobile) -->
                     <div class="d-flex justify-content-between align-items-center mb-3 d-lg-none">
-                        <button class="btn btn-outline-primary btn-sm rounded-pill" data-bs-toggle="collapse" 
-                                data-bs-target="#filtersCollapse">
+                        <button class="btn btn-outline-primary btn-sm rounded-pill" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
                             <i class="bi bi-sliders me-1"></i>الفلاتر
                         </button>
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-arrow-down-up text-muted"></i>
-                            <select class="form-select form-select-sm" style="width: auto;" onchange="applyFilters()">
-                                <option>الأكثر خبرة</option>
+                            <select class="form-select form-select-sm" style="width: auto;" id="sortByMobile">
+                                <option value="experience">الأكثر خبرة</option>
+                                <option value="price_asc">السعر: الأقل أولاً</option>
+                                <option value="price_desc">السعر: الأعلى أولاً</option>
                             </select>
                         </div>
                     </div>
                     
                     <!-- Doctors List -->
                     <div id="doctorsList">
-                        <!-- Loading State -->
                         <div class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">جارٍ التحميل...</span>

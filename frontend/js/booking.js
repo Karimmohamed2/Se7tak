@@ -36,18 +36,16 @@ function calculateVAT(price) {
 // Render stars
 function renderBookingStars(rating) {
     let stars = '';
+    const rounded = Math.round(rating || 0);
     for (let i = 1; i <= 5; i++) {
-        if (i <= Math.round(rating || 0)) {
-            stars += '<i class="bi bi-star-fill text-warning"></i>';
-        } else {
-            stars += '<i class="bi bi-star text-muted"></i>';
-        }
+        stars += i <= rounded
+            ? '<i class="bi bi-star-fill text-warning"></i>'
+            : '<i class="bi bi-star text-muted"></i>';
     }
     return stars;
 }
 
 // ==================== Booking Page ====================
-
 let bookingData = {
     doctor: null,
     slot: null,
@@ -66,27 +64,21 @@ async function loadBookingData() {
     }
 
     try {
-        // Show loading
         const container = document.getElementById('bookingContainer');
-        if (container) {
-            container.style.opacity = '0.5';
-        }
+        if (container) container.style.opacity = '0.5';
 
-        // Load doctor details
         const doctor = await api.getDoctorById(doctorId);
         if (!doctor) {
             showBookingError('الطبيب غير موجود');
             return;
         }
 
-        // Load slot details - try to get from doctor's slots
+        // Load slot details (optional, just for display)
         const today = new Date().toISOString().split('T')[0];
         const slots = await api.getDoctorSlots(doctorId, today);
         const slot = slots.find(s => s.id === slotId);
         
         if (!slot) {
-            // If not found in today's slots, check if we have the slot ID only
-            // Create a mock slot with the ID for the booking process
             console.warn('Slot not found in available slots, proceeding with ID only');
         }
 
@@ -98,9 +90,7 @@ async function loadBookingData() {
 
         renderBookingPage();
         
-        if (container) {
-            container.style.opacity = '1';
-        }
+        if (container) container.style.opacity = '1';
 
     } catch (err) {
         console.error('Failed to load booking data:', err);
@@ -204,7 +194,6 @@ async function handleBookingSubmit(e) {
     const submitBtn = document.getElementById('submitBtn');
     const originalText = document.getElementById('submitBtnText')?.textContent || 'تأكيد الحجز ودفع';
 
-    // Disable button
     submitBtn.disabled = true;
     const btnText = document.getElementById('submitBtnText');
     if (btnText) btnText.textContent = 'جاري التأكيد...';
@@ -213,35 +202,27 @@ async function handleBookingSubmit(e) {
     if (spinner) spinner.classList.remove('d-none');
 
     try {
-        // Check if user is logged in
         const token = localStorage.getItem('auth_token');
         if (!token) {
-            // Redirect to login with return URL
             const returnUrl = encodeURIComponent(window.location.href);
             window.location.href = `login.html?redirect=${returnUrl}`;
             return;
         }
 
-        // Create booking
         const result = await api.createBooking({
             doctorId: bookingData.doctor.id,
             slotId: bookingData.slot.id,
             notes: notes || undefined
         });
 
-        // Mock payment
         await api.mockPayment(result.appointmentId, bookingData.total);
 
-        // Redirect to confirmation page
         window.location.href = `booking-confirmation.html?id=${result.appointmentId}`;
 
     } catch (err) {
         console.error('Booking failed:', err);
-        
-        // Show error
         showToast(err.message || 'فشل إتمام الحجز، يرجى المحاولة مرة أخرى', 'error');
 
-        // Reset button
         submitBtn.disabled = false;
         const btnTextEl = document.getElementById('submitBtnText');
         if (btnTextEl) btnTextEl.textContent = originalText;
@@ -252,7 +233,6 @@ async function handleBookingSubmit(e) {
 }
 
 // ==================== Booking Confirmation Page ====================
-
 async function loadConfirmationData() {
     const appointmentId = getUrlParam('id');
 
@@ -262,7 +242,6 @@ async function loadConfirmationData() {
     }
 
     try {
-        // Load appointment details
         const appointment = await api.getAppointmentById(appointmentId);
         if (!appointment) {
             showConfirmationError('الحجز غير موجود');
@@ -277,29 +256,24 @@ async function loadConfirmationData() {
 }
 
 function renderConfirmationPage(appointment) {
-    // Update appointment number
     const numEl = document.getElementById('appointmentNumber');
     if (numEl) numEl.textContent = `#${appointment.id.toString().slice(0, 8).toUpperCase()}`;
 
-    // Update doctor info
     const nameEl = document.getElementById('doctorName');
     if (nameEl) nameEl.textContent = appointment.doctorName;
     
     const specialtyEl = document.getElementById('doctorSpecialty');
     if (specialtyEl) specialtyEl.textContent = appointment.specialty;
 
-    // Update slot info
     const dateEl = document.getElementById('confirmDate');
     if (dateEl) dateEl.textContent = formatDateAr(appointment.startTime);
     
     const timeEl = document.getElementById('confirmTime');
     if (timeEl) timeEl.textContent = formatTimeAr(appointment.startTime);
 
-    // Update price
     const priceEl = document.getElementById('confirmPrice');
     if (priceEl) priceEl.textContent = formatBookingPrice(appointment.price);
 
-    // Update status badge
     const statusBadge = document.getElementById('statusBadge');
     const statusLabels = {
         'pending': { text: 'بانتظار التأكيد', class: 'bg-warning text-dark' },
@@ -331,7 +305,6 @@ function showConfirmationError(message) {
 }
 
 // ==================== Toast ====================
-
 function showToast(message, type = 'info') {
     let container = document.getElementById('toastContainer');
     if (!container) {
@@ -374,23 +347,15 @@ function showToast(message, type = 'info') {
 }
 
 // ==================== Initialize ====================
-
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     
-    // Check which page we're on
     const path = window.location.pathname;
-
     if (path.includes('booking.html')) {
         loadBookingData();
-
-        // Setup form handler
         const form = document.getElementById('bookingForm');
-        if (form) {
-            form.addEventListener('submit', handleBookingSubmit);
-        }
+        if (form) form.addEventListener('submit', handleBookingSubmit);
         
-        // Payment method selection
         document.querySelectorAll('.payment-method').forEach(method => {
             method.addEventListener('click', () => {
                 document.querySelectorAll('.payment-method').forEach(m => {
@@ -405,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
+    
     if (path.includes('booking-confirmation.html')) {
         loadConfirmationData();
     }

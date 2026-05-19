@@ -120,7 +120,6 @@
             accent-color: #1E88E5;
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <div class="register-page d-flex align-items-center py-5">
@@ -145,24 +144,14 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
-                                    <div class="feature-icon">
-                                        <i class="bi bi-shield-check fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-1">أمان تام</h6>
-                                        <p class="small opacity-75 mb-0">بياناتك محمية</p>
-                                    </div>
+                                    <div class="feature-icon"><i class="bi bi-shield-check fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">أمان تام</h6><p class="small opacity-75 mb-0">بياناتك محمية</p></div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
-                                    <div class="feature-icon">
-                                        <i class="bi bi-headset fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-1">دعم 24/7</h6>
-                                        <p class="small opacity-75 mb-0">فريقنا متاح</p>
-                                    </div>
+                                    <div class="feature-icon"><i class="bi bi-headset fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">دعم 24/7</h6><p class="small opacity-75 mb-0">فريقنا متاح</p></div>
                                 </div>
                             </div>
                         </div>
@@ -249,6 +238,32 @@
                                     </div>
                                 </div>
 
+                                <!-- Doctor-specific fields (hidden initially) -->
+                                <div id="doctorFields" style="display: none;">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">التخصص</label>
+                                        <select class="form-select" id="specialtyId">
+                                            <option value="">اختر التخصص</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">سنوات الخبرة</label>
+                                        <input type="number" class="form-control" id="yearsOfExperience" placeholder="عدد سنوات الخبرة" min="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">سعر الكشف (ج.م)</label>
+                                        <input type="number" class="form-control" id="price" placeholder="سعر الكشف" min="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">عنوان العيادة</label>
+                                        <textarea class="form-control" id="clinicAddress" rows="2" placeholder="عنوان العيادة"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">نبذة عن الطبيب</label>
+                                        <textarea class="form-control" id="bio" rows="3" placeholder="نبذة عن خبراتك ومؤهلاتك"></textarea>
+                                    </div>
+                                </div>
+
                                 <div class="terms-check mb-4">
                                     <input type="checkbox" id="terms" required>
                                     <label for="terms" class="text-muted small">
@@ -282,35 +297,48 @@
     <script>
         let selectedRole = 'patient';
 
-        // Select role
+        async function loadSpecialtiesForRegister() {
+            try {
+                const specialties = await api.getSpecialties();
+                const select = document.getElementById('specialtyId');
+                if (select) {
+                    select.innerHTML = '<option value="">اختر التخصص</option>' + 
+                        specialties.map(s => `<option value="${s.id}">${s.name_ar}</option>`).join('');
+                }
+            } catch(e) { console.error('Failed to load specialties', e); }
+        }
+
         function selectRole(role) {
             selectedRole = role;
             document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('role' + (role === 'patient' ? 'Patient' : 'Doctor')).classList.add('active');
-        }
-
-        // Toggle password visibility
-        function togglePassword(inputId, iconId) {
-            const passwordInput = document.getElementById(inputId);
-            const toggleIcon = document.getElementById(iconId);
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('bi-eye');
-                toggleIcon.classList.add('bi-eye-slash');
+            document.getElementById(role === 'patient' ? 'rolePatient' : 'roleDoctor').classList.add('active');
+            const doctorFields = document.getElementById('doctorFields');
+            if (role === 'doctor') {
+                doctorFields.style.display = 'block';
+                loadSpecialtiesForRegister();
             } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('bi-eye-slash');
-                toggleIcon.classList.add('bi-eye');
+                doctorFields.style.display = 'none';
             }
         }
 
-        // Egyptian phone validation
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
         function isValidEgyptianPhone(phone) {
             return /^01\d{9}$/.test(phone);
         }
 
-        // Handle register form submission
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -323,99 +351,57 @@
             const registerText = document.getElementById('registerText');
             const registerSpinner = document.getElementById('registerSpinner');
 
-            // Validation
             if (fullName.length < 3) {
-                showError('الاسم قصير جداً، يجب أن يكون 3 أحرف على الأقل');
+                alert('الاسم قصير جداً، يجب أن يكون 3 أحرف على الأقل');
                 return;
             }
-
             if (!isValidEgyptianPhone(phone)) {
-                showError('رقم هاتف مصري غير صالح (01xxxxxxxxx)');
+                alert('رقم هاتف مصري غير صالح (01xxxxxxxxx)');
                 return;
             }
-
             if (password.length < 8) {
-                showError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+                alert('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
                 return;
             }
-
             if (password !== confirmPassword) {
-                showError('كلمة المرور غير متطابقة');
+                alert('كلمة المرور غير متطابقة');
                 return;
             }
 
-            // Show loading state
+            const userData = {
+                fullName: fullName,
+                phone: phone,
+                email: email,
+                password: password,
+                role: selectedRole
+            };
+
+            if (selectedRole === 'doctor') {
+                userData.specialtyId = document.getElementById('specialtyId').value || null;
+                userData.yearsOfExperience = parseInt(document.getElementById('yearsOfExperience').value) || 0;
+                userData.price = parseFloat(document.getElementById('price').value) || 0;
+                userData.clinicAddress = document.getElementById('clinicAddress').value.trim();
+                userData.bio = document.getElementById('bio').value.trim();
+            }
+
             registerBtn.disabled = true;
             registerText.textContent = 'جارٍ الإنشاء...';
             registerSpinner.classList.remove('d-none');
 
             try {
-                // Call API
-                const result = await api.register({
-                    fullName: fullName,
-                    phone: phone,
-                    email: email,
-                    password: password,
-                    role: selectedRole
-                });
-
-                // Success - show message and redirect to login
-                showSuccess('تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول.');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-
+                const result = await api.register(userData);
+                alert('تم إنشاء الحساب بنجاح! سيتم نقلك إلى لوحة التحكم.');
+                window.location.href = 'dashboard.html';
             } catch (err) {
-                console.error('Registration failed:', err);
-
-                // Show error
                 registerBtn.disabled = false;
                 registerText.textContent = 'إنشاء حساب';
                 registerSpinner.classList.add('d-none');
-
-                const errorMsg = err.message?.includes('already registered') 
-                    ? 'البريد الإلكتروني مسجل مسبقاً' 
-                    : err.message || 'فشل إنشاء الحساب';
-                showError(errorMsg);
+                alert(err.message || 'فشل إنشاء الحساب');
             }
         });
 
-        // Show error alert
-        function showError(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-danger alert-dismissible fade show rounded-4 mb-3';
-            alertDiv.innerHTML = `
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-
-            const form = document.getElementById('registerForm');
-            form.parentNode.insertBefore(alertDiv, form);
-
-            setTimeout(() => alertDiv.remove(), 5000);
-        }
-
-        // Show success alert
-        function showSuccess(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-success alert-dismissible fade show rounded-4 mb-3';
-            alertDiv.innerHTML = `
-                <i class="bi bi-check-circle-fill me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-
-            const form = document.getElementById('registerForm');
-            form.parentNode.insertBefore(alertDiv, form);
-        }
-
-        // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('auth_token');
-            if (token) {
-                window.location.href = 'dashboard.html';
-            }
+            if (localStorage.getItem('auth_token')) window.location.href = 'dashboard.html';
         });
     </script>
 </body>

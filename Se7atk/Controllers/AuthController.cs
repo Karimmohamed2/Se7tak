@@ -66,13 +66,19 @@ namespace Se7atk.Controllers
             }
             else if (user.Role == UserRole.Doctor)
             {
-                _context.DoctorProfiles.Add(new DoctorProfile
+                
+                var doctorProfile = new DoctorProfile
                 {
                     Id = user.Id,
-                    SpecialtyId = 1,
-                    Price = 0,
+                    SpecialtyId = request.SpecialtyId ?? 1,         
+                    Price = request.Price ?? 0,
+                    YearsOfExperience = request.YearsOfExperience ?? 0,
+                    ClinicAddress = request.ClinicAddress,
+                    Bio = request.Bio,
+                    CityId = request.CityId,
                     IsApproved = false
-                });
+                };
+                _context.DoctorProfiles.Add(doctorProfile);
             }
 
             await _context.SaveChangesAsync();
@@ -92,14 +98,11 @@ namespace Se7atk.Controllers
             });
         }
 
-        // POST: api/auth/login
+        // POST: api/auth/login 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
@@ -126,7 +129,7 @@ namespace Se7atk.Controllers
 
         // GET: api/auth/me
         [HttpGet("me")]
-        [Authorize]   // ← كان ناقص
+        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -146,62 +149,31 @@ namespace Se7atk.Controllers
             });
         }
 
-        // POST: api/auth/forgot-password
-        [HttpPost("forgot-password")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
-        {
-            // دايمًا نرجع نفس الرسالة (security best practice)
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email);
+        // باقي الدوال (ForgotPassword, ResetPassword) 
 
-            if (user != null)
-            {
-                // TODO: ابعت إيميل حقيقي هنا
-                // مثلاً: await _emailService.SendResetEmail(user.Email, token);
-            }
-
-            return Ok(new { message = "لو البريد الإلكتروني مسجل، هتوصلك رسالة قريباً" });
-        }
-
-        // POST: api/auth/reset-password
-        [HttpPost("reset-password")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-        {
-            // TODO: تحقق من الـ token وغيّر الباسورد
-            // دلوقتي placeholder بس
-            return Ok(new { message = "تم إعادة تعيين كلمة المرور" });
-        }
-
-        // ── Helper ──────────────────────────────────────────
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email,          user.Email),
-                new Claim("fullName",                user.FullName),
-                new Claim(ClaimTypes.Role,           user.Role.ToString())
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("fullName", user.FullName),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
-
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(
-                                       double.Parse(_config["Jwt:ExpireHours"]!)),
+                expires: DateTime.UtcNow.AddHours(double.Parse(_config["Jwt:ExpireHours"]!)),
                 signingCredentials: creds
             );
-
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 
-    // ── Request DTOs ─────────────────────────────────────────
+    // DTOs مع الحقول الإضافية للطبيب
     public class RegisterRequest
     {
         public string FullName { get; set; } = null!;
@@ -209,22 +181,19 @@ namespace Se7atk.Controllers
         public string Password { get; set; } = null!;
         public string? Phone { get; set; }
         public string Role { get; set; } = "patient";
+
+        // حقول الطبيب
+        public int? SpecialtyId { get; set; }
+        public decimal? Price { get; set; }
+        public int? YearsOfExperience { get; set; }
+        public string? ClinicAddress { get; set; }
+        public string? Bio { get; set; }
+        public int? CityId { get; set; }
     }
 
     public class LoginRequest
     {
         public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
-    }
-
-    public class ForgotPasswordRequest
-    {
-        public string Email { get; set; } = null!;
-    }
-
-    public class ResetPasswordRequest
-    {
-        public string Token { get; set; } = null!;
         public string Password { get; set; } = null!;
     }
 }

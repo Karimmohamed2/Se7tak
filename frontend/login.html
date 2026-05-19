@@ -117,7 +117,6 @@
             background: #e2e8f0;
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <div class="login-page d-flex align-items-center py-5">
@@ -220,37 +219,21 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
-                                    <div class="feature-icon">
-                                        <i class="bi bi-shield-check fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-1">أمان تام</h6>
-                                        <p class="small opacity-75 mb-0">بياناتك محمية</p>
-                                    </div>
+                                    <div class="feature-icon"><i class="bi bi-shield-check fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">أمان تام</h6><p class="small opacity-75 mb-0">بياناتك محمية</p></div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
-                                    <div class="feature-icon">
-                                        <i class="bi bi-headset fs-4"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-1">دعم 24/7</h6>
-                                        <p class="small opacity-75 mb-0">فريقنا متاح</p>
-                                    </div>
+                                    <div class="feature-icon"><i class="bi bi-headset fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">دعم 24/7</h6><p class="small opacity-75 mb-0">فريقنا متاح</p></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Testimonial -->
                         <div class="mt-5 p-4 rounded-4" style="background: rgba(255,255,255,0.1);">
-                            <div class="d-flex gap-1 mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
+                            <div class="d-flex gap-1 mb-3"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>
                             <p class="mb-3 opacity-90">"أفضل تجربة رعاية صحية حصلت عليها، التنظيم والمتابعة في صحتك مذهلة."</p>
                             <p class="small opacity-60 mb-0">— د. أحمد خالد، مستخدم للمنصة</p>
                         </div>
@@ -263,11 +246,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/api.js"></script>
     <script>
-        // Toggle password visibility
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
-
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 toggleIcon.classList.remove('bi-eye');
@@ -279,69 +260,42 @@
             }
         }
 
-        // Social login
         function socialLogin(provider) {
             alert('تسجيل الدخول باستخدام ' + provider + ' (قريباً)');
         }
 
-        // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
             const loginSpinner = document.getElementById('loginSpinner');
 
-            // Show loading state
             loginBtn.disabled = true;
             loginText.textContent = 'جارٍ الدخول...';
             loginSpinner.classList.remove('d-none');
 
             try {
-                // Call API
                 const result = await api.login(email, password);
-
-                // Success - redirect to dashboard or previous page
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirect = urlParams.get('redirect') || 'dashboard.html';
                 window.location.href = redirect;
-
             } catch (err) {
-                console.error('Login failed:', err);
-
-                // Show error
                 loginBtn.disabled = false;
                 loginText.textContent = 'تسجيل الدخول';
                 loginSpinner.classList.add('d-none');
-
-                // Create error alert
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-danger alert-dismissible fade show rounded-4';
-                alertDiv.innerHTML = `
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    ${err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-
+                alertDiv.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> ${err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
                 const form = document.getElementById('loginForm');
                 form.parentNode.insertBefore(alertDiv, form);
-
-                // Auto remove after 5 seconds
-                setTimeout(() => {
-                    alertDiv.remove();
-                }, 5000);
+                setTimeout(() => alertDiv.remove(), 5000);
             }
         });
 
-        // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('auth_token');
-            if (token) {
-                // Already logged in, redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }
+            if (localStorage.getItem('auth_token')) window.location.href = 'dashboard.html';
         });
     </script>
 </body>

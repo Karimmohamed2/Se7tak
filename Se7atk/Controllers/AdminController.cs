@@ -1,6 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Se7atk.Dtos;
+using Se7atk.Models;
 using Se7atk.Services;
 
 namespace Se7atk.Controllers
@@ -11,10 +13,12 @@ namespace Se7atk.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
+        private readonly Se7atkDbContext _context;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService, Se7atkDbContext context)
         {
             _adminService = adminService;
+            _context = context;
         }
 
         // GET: api/admin/dashboard
@@ -80,6 +84,36 @@ namespace Se7atk.Controllers
                 return NotFound(new { message = "المستخدم غير موجود" });
 
             return Ok(new { message = "تم تغيير حالة المستخدم" });
+        }
+
+        //  GET: api/admin/appointments
+        // جلب جميع المواعيد (للوحة تحكم الأدمن)
+        [HttpGet("appointments")]
+        public async Task<IActionResult> GetAllAppointments()
+        {
+            var appointments = await _context.Appointments
+                .Include(a => a.Patient)
+                    .ThenInclude(p => p.User)
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.User)
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Specialty)
+                .Include(a => a.Slot)
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new AdminAppointmentDto
+                {
+                    Id = a.Id,
+                    DoctorName = a.Doctor.User.FullName,
+                    PatientName = a.Patient.User.FullName,
+                    Specialty = a.Doctor.Specialty.NameAr,
+                    StartTime = a.Slot.StartTime,
+                    Price = a.Doctor.Price,
+                    Status = a.Status.ToString(),
+                    Notes = a.Notes
+                })
+                .ToListAsync();
+
+            return Ok(appointments);
         }
     }
 }

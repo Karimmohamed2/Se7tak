@@ -19,14 +19,11 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <style>
-        /* ===== RTL Number Fix ===== */
         .phone-rtl {
             direction: ltr;
             display: inline-block;
             unicode-bidi: embed;
         }
-
-        /* ===== Pharmacy Details Styles ===== */
         .pharmacy-hero {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border-radius: 1.5rem;
@@ -34,7 +31,6 @@
             color: white;
             margin-bottom: 2rem;
         }
-
         .pharmacy-avatar-lg {
             width: 80px;
             height: 80px;
@@ -46,7 +42,6 @@
             font-size: 2.5rem;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
-
         .badge-24h {
             background: rgba(255,255,255,0.2);
             color: white;
@@ -56,7 +51,6 @@
             font-weight: 600;
             backdrop-filter: blur(4px);
         }
-
         .badge-closed {
             background: rgba(255,255,255,0.15);
             color: rgba(255,255,255,0.9);
@@ -65,15 +59,11 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-
-        /* ===== Map Styles ===== */
         #pharmacyMap {
             height: 300px;
             border-radius: 1rem;
             z-index: 1;
         }
-
-        /* ===== Medicine Item ===== */
         .medicine-item {
             background: #f8fafc;
             border-radius: 1rem;
@@ -86,7 +76,6 @@
             border-color: #e2e8f0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-
         .medicine-icon {
             width: 48px;
             height: 48px;
@@ -97,8 +86,6 @@
             justify-content: center;
             flex-shrink: 0;
         }
-
-        /* ===== Review Item ===== */
         .review-item {
             padding-bottom: 1.5rem;
             margin-bottom: 1.5rem;
@@ -109,7 +96,6 @@
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
         .review-avatar {
             width: 44px;
             height: 44px;
@@ -123,31 +109,6 @@
             font-size: 1rem;
             flex-shrink: 0;
         }
-
-        /* ===== Rating Stars ===== */
-        .rating-stars {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        .rating-stars .bi-star-fill {
-            color: #f59e0b;
-            font-size: 0.9rem;
-        }
-        .rating-stars .bi-star {
-            color: #e2e8f0;
-            font-size: 0.9rem;
-        }
-        .rating-value {
-            font-weight: 700;
-            margin-right: 0.5rem;
-        }
-        .rating-count {
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-
-        /* ===== Info Cards ===== */
         .info-card {
             background: white;
             border-radius: 1rem;
@@ -155,7 +116,6 @@
             border: 1px solid #e2e8f0;
             margin-bottom: 1rem;
         }
-
         .info-icon {
             width: 40px;
             height: 40px;
@@ -168,20 +128,6 @@
             font-size: 1.1rem;
             flex-shrink: 0;
         }
-
-        /* ===== Loading State ===== */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 0.5rem;
-        }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* ===== Action Buttons ===== */
         .btn-action {
             padding: 0.75rem 1.5rem;
             border-radius: 1rem;
@@ -191,10 +137,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-        .btn-action:hover {
-            transform: translateY(-2px);
-        }
-
         .btn-phone {
             background: #10b981;
             color: white;
@@ -204,7 +146,6 @@
             background: #059669;
             color: white;
         }
-
         .btn-directions {
             background: #f8fafc;
             color: #1e293b;
@@ -214,8 +155,6 @@
             background: #f1f5f9;
             border-color: #cbd5e1;
         }
-
-        /* ===== Responsive ===== */
         @media (max-width: 768px) {
             .pharmacy-hero {
                 padding: 1.5rem;
@@ -230,24 +169,18 @@
             }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <!-- ==================== NAVBAR ==================== -->
     <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
-                <div class="logo-icon">
-                    <i class="bi bi-shield-check"></i>
-                    <i class="bi bi-activity"></i>
-                </div>
+                <div class="logo-icon"><i class="bi bi-shield-check"></i><i class="bi bi-activity"></i></div>
                 <span class="brand-text">صحتك<span class="brand-dot">.</span></span>
             </a>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
@@ -255,7 +188,6 @@
                     <li class="nav-item"><a class="nav-link active" href="pharmacies.html">الصيدليات</a></li>
                     <li class="nav-item"><a class="nav-link" href="dashboard.html">المواعيد</a></li>
                 </ul>
-
                 <div class="d-flex align-items-center gap-2" id="authButtons">
                     <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
                     <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
@@ -320,37 +252,25 @@
             <div class="row g-4">
                 <!-- Main Content -->
                 <div class="col-lg-8">
-
                     <!-- About & Info -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-4">
                             <h4 class="fw-bold mb-3">عن الصيدلية</h4>
                             <p class="text-muted" id="pharmacyDescription">جارٍ التحميل...</p>
-
                             <div class="row g-3 mt-2">
                                 <div class="col-sm-6">
                                     <div class="info-card mb-0">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="info-icon">
-                                                <i class="bi bi-clock"></i>
-                                            </div>
-                                            <div>
-                                                <div class="text-muted small">ساعات العمل</div>
-                                                <div class="fw-semibold" id="workingHours">...</div>
-                                            </div>
+                                            <div class="info-icon"><i class="bi bi-clock"></i></div>
+                                            <div><div class="text-muted small">ساعات العمل</div><div class="fw-semibold" id="workingHours">...</div></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="info-card mb-0">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div class="info-icon">
-                                                <i class="bi bi-telephone"></i>
-                                            </div>
-                                            <div>
-                                                <div class="text-muted small">رقم الهاتف</div>
-                                                <div class="fw-semibold phone-rtl" id="phoneDisplay">...</div>
-                                            </div>
+                                            <div class="info-icon"><i class="bi bi-telephone"></i></div>
+                                            <div><div class="text-muted small">رقم الهاتف</div><div class="fw-semibold phone-rtl" id="phoneDisplay">...</div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -361,10 +281,7 @@
                     <!-- Map -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-4">
-                            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                                <i class="bi bi-geo-alt text-primary"></i>
-                                الموقع على الخريطة
-                            </h4>
+                            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2"><i class="bi bi-geo-alt text-primary"></i> الموقع على الخريطة</h4>
                             <div id="pharmacyMap"></div>
                         </div>
                     </div>
@@ -373,19 +290,10 @@
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-capsule text-primary"></i>
-                                    الأدوية المتاحة
-                                </h4>
+                                <h4 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="bi bi-capsule text-primary"></i> الأدوية المتاحة</h4>
                                 <span class="badge bg-primary" id="medicinesCount">0</span>
                             </div>
-                            <div id="medicinesList">
-                                <div class="text-center py-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">جارٍ التحميل...</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="medicinesList"><div class="text-center py-4"><div class="spinner-border text-primary"></div></div></div>
                         </div>
                     </div>
 
@@ -394,76 +302,24 @@
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h4 class="fw-bold mb-0">تقييمات المرضى</h4>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="rating-stars" id="headerStars"></span>
-                                    <span class="fw-bold" id="headerRating">0.0</span>
-                                    <span class="text-muted small">(<span id="headerReviewCount">0</span> تقييم)</span>
-                                </div>
+                                <div class="d-flex align-items-center gap-2"><span class="rating-stars" id="headerStars"></span><span class="fw-bold" id="headerRating">0.0</span><span class="text-muted small">(<span id="headerReviewCount">0</span> تقييم)</span></div>
                             </div>
-                            <div id="reviewsList">
-                                <div class="text-center py-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">جارٍ التحميل...</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="reviewsList"><div class="text-center py-4"><div class="spinner-border text-primary"></div></div></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sidebar -->
                 <div class="col-lg-4">
-                    <!-- Quick Info -->
                     <div class="card border-0 shadow-sm mb-4 sticky-top" style="top: 90px;">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-4">معلومات سريعة</h5>
-
-                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-                                <div class="info-icon">
-                                    <i class="bi bi-shop"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">الاسم</div>
-                                    <div class="fw-semibold" id="sidebarName">...</div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-                                <div class="info-icon">
-                                    <i class="bi bi-geo-alt"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">المدينة</div>
-                                    <div class="fw-semibold" id="sidebarCity">...</div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-                                <div class="info-icon">
-                                    <i class="bi bi-clock"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">الحالة</div>
-                                    <div class="fw-semibold" id="sidebarStatus">...</div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="info-icon">
-                                    <i class="bi bi-star"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">التقييم</div>
-                                    <div class="fw-semibold" id="sidebarRating">...</div>
-                                </div>
-                            </div>
-
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-shop"></i></div><div><div class="text-muted small">الاسم</div><div class="fw-semibold" id="sidebarName">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-geo-alt"></i></div><div><div class="text-muted small">المدينة</div><div class="fw-semibold" id="sidebarCity">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-clock"></i></div><div><div class="text-muted small">الحالة</div><div class="fw-semibold" id="sidebarStatus">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3"><div class="info-icon"><i class="bi bi-star"></i></div><div><div class="text-muted small">التقييم</div><div class="fw-semibold" id="sidebarRating">...</div></div></div>
                             <hr class="my-4">
-
-                            <a href="#" class="btn btn-primary w-100 py-2 rounded-pill fw-semibold" id="sidebarPhoneBtn">
-                                <i class="bi bi-telephone me-2"></i>
-                                اتصل الآن
-                            </a>
+                            <a href="#" class="btn btn-primary w-100 py-2 rounded-pill fw-semibold" id="sidebarPhoneBtn"><i class="bi bi-telephone me-2"></i> اتصل الآن</a>
                         </div>
                     </div>
                 </div>
@@ -475,599 +331,19 @@
     <footer class="bg-dark text-white py-5 mt-5">
         <div class="container">
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <div class="logo-icon bg-white bg-opacity-10">
-                            <i class="bi bi-shield-check text-white"></i>
-                            <i class="bi bi-activity text-white"></i>
-                        </div>
-                        <span class="brand-text text-white">صحتك<span class="brand-dot">.</span></span>
-                    </div>
-                    <p class="text-white-50 small">
-                        أكبر شبكة طبية في مصر 🇪🇬 بنسهّل عليك توصل لأحسن دكاترة 💙
-                    </p>
-                </div>
-                <div class="col-md-2">
-                    <h6 class="fw-bold mb-3">روابط سريعة</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">الرئيسية</a></li>
-                        <li class="mb-2"><a href="doctors.html" class="text-white-50 text-decoration-none">الأطباء</a></li>
-                        <li class="mb-2"><a href="pharmacies.html" class="text-white-50 text-decoration-none">الصيدليات</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2">
-                    <h6 class="fw-bold mb-3">الدعم</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">الأسئلة الشائعة</a></li>
-                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">اتصل بينا</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h6 class="fw-bold mb-3">تواصل معانا</h6>
-                    <ul class="list-unstyled small text-white-50">
-                        <li class="mb-2 d-flex align-items-center gap-2">
-                            <i class="bi bi-geo-alt"></i> القاهرة، مصر
-                        </li>
-                        <li class="mb-2 d-flex align-items-center gap-2">
-                            <i class="bi bi-telephone"></i> <span class="phone-rtl">19XXX</span>
-                        </li>
-                    </ul>
-                </div>
+                <div class="col-md-4"><div class="d-flex align-items-center gap-2 mb-3"><div class="logo-icon bg-white bg-opacity-10"><i class="bi bi-shield-check text-white"></i><i class="bi bi-activity text-white"></i></div><span class="brand-text text-white">صحتك<span class="brand-dot">.</span></span></div><p class="text-white-50 small">أكبر شبكة طبية في مصر 🇪🇬 بنسهّل عليك توصل لأحسن دكاترة 💙</p></div>
+                <div class="col-md-2"><h6 class="fw-bold mb-3">روابط سريعة</h6><ul class="list-unstyled small"><li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">الرئيسية</a></li><li class="mb-2"><a href="doctors.html" class="text-white-50 text-decoration-none">الأطباء</a></li><li class="mb-2"><a href="pharmacies.html" class="text-white-50 text-decoration-none">الصيدليات</a></li></ul></div>
+                <div class="col-md-2"><h6 class="fw-bold mb-3">الدعم</h6><ul class="list-unstyled small"><li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">الأسئلة الشائعة</a></li><li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">اتصل بينا</a></li></ul></div>
+                <div class="col-md-4"><h6 class="fw-bold mb-3">تواصل معانا</h6><ul class="list-unstyled small text-white-50"><li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-geo-alt"></i> القاهرة، مصر</li><li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-telephone"></i> <span class="phone-rtl">19XXX</span></li></ul></div>
             </div>
             <hr class="border-white border-opacity-10 my-4">
-            <div class="text-center small text-white-50">
-                © 2026 منصة صحتك الطبية. صُنع بـ ❤️ في مصر 🇪🇬
-            </div>
+            <div class="text-center small text-white-50">© 2026 منصة صحتك الطبية. صُنع بـ ❤️ في مصر 🇪🇬</div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="js/api.js"></script>
-
-    <script>
-        // ==================== Mock Data (Fallback) ====================
-        const mockPharmacies = [
-            {
-                id: 'p1',
-                name: 'صيدلية النصر',
-                cityName: 'القاهرة',
-                addressDetail: 'مدينة نصر - شارع النصر',
-                phone: '01012345678',
-                isOpen24h: true,
-                averageRating: 4.5,
-                reviewsCount: 128,
-                description: 'صيدلية متكاملة توفر جميع الأدوية والمستلزمات الطبية على مدار 24 ساعة. نقدم خدمة توصيل سريعة لجميع مناطق القاهرة.',
-                lat: 30.0444,
-                lng: 31.2357
-            },
-            {
-                id: 'p2',
-                name: 'صيدلية العزبي',
-                cityName: 'الجيزة',
-                addressDetail: 'الدقي - شارع التحرير',
-                phone: '01112223344',
-                isOpen24h: false,
-                averageRating: 4.2,
-                reviewsCount: 85,
-                description: 'صيدلية كبيرة توفر أدوية مستوردة ومحلية بأسعار منافسة. فريق صيدلي متخصص لاستشارات الأدوية.',
-                lat: 30.0131,
-                lng: 31.2089
-            },
-            {
-                id: 'p3',
-                name: 'صيدلية 19011',
-                cityName: 'الإسكندرية',
-                addressDetail: 'سموحة - شارع جمال عبد الناصر',
-                phone: '01555556666',
-                isOpen24h: true,
-                averageRating: 4.8,
-                reviewsCount: 256,
-                description: 'شبكة صيدليات معروفة بخدمة التوصيل السريع. متاحة 24 ساعة لتلبية احتياجاتك الصحية في أي وقت.',
-                lat: 31.2001,
-                lng: 29.9187
-            },
-            {
-                id: 'p4',
-                name: 'صيدلية المصري',
-                cityName: 'القاهرة',
-                addressDetail: 'المعادي - شارع 9',
-                phone: '01000001111',
-                isOpen24h: false,
-                averageRating: 4.0,
-                reviewsCount: 64,
-                description: 'صيدلية عائلية توفر استشارات صيدلية مجانية. نقدم خصومات خاصة للأدوية المزمنة.',
-                lat: 29.9668,
-                lng: 31.2500
-            },
-            {
-                id: 'p5',
-                name: 'صيدلية الحياة',
-                cityName: 'الإسكندرية',
-                addressDetail: 'سموحة، 34 شارع أبو قير',
-                phone: '01022222222',
-                isOpen24h: true,
-                averageRating: 4.3,
-                reviewsCount: 95,
-                description: 'صيدلية متكاملة في قلب الإسكندرية. خدمة متميزة وأسعار منافسة.',
-                lat: 31.2156,
-                lng: 29.9553
-            },
-            {
-                id: 'p6',
-                name: 'صيدلية الجمهورية',
-                cityName: 'الجيزة',
-                addressDetail: '6 أكتوبر، 33 شارع فيصل',
-                phone: '01044444444',
-                isOpen24h: true,
-                averageRating: 4.6,
-                reviewsCount: 142,
-                description: 'صيدلية حديثة بأحدث الأجهزة الطبية. فريق صيدلي متخصص.',
-                lat: 29.9765,
-                lng: 30.9500
-            },
-            {
-                id: 'p7',
-                name: 'صيدلية المعادي',
-                cityName: 'القاهرة',
-                addressDetail: 'المعادي، 55 شارع النصر',
-                phone: '01066666666',
-                isOpen24h: true,
-                averageRating: 4.4,
-                reviewsCount: 78,
-                description: 'صيدلية راقية في المعادي. خدمة توصيل مجانية داخل المنطقة.',
-                lat: 29.9668,
-                lng: 31.2500
-            },
-            {
-                id: 'p8',
-                name: 'صيدلية الأمل',
-                cityName: 'المنصورة',
-                addressDetail: '78 شارع الجمهورية، المنصورة',
-                phone: '01088888888',
-                isOpen24h: true,
-                averageRating: 4.1,
-                reviewsCount: 55,
-                description: 'صيدلية متكاملة في المنصورة. خدمة 24 ساعة.',
-                lat: 31.0364,
-                lng: 31.3807
-            },
-            {
-                id: 'p9',
-                name: 'صيدلية السلام',
-                cityName: 'الزقازيق',
-                addressDetail: '90 شارع الزقازيق، الشرقية',
-                phone: '01077777777',
-                isOpen24h: false,
-                averageRating: 3.9,
-                reviewsCount: 42,
-                description: 'صيدلية عائلية في الزقازيق. أسعار مناسبة للجميع.',
-                lat: 30.5833,
-                lng: 31.5167
-            },
-            {
-                id: 'p10',
-                name: 'صيدلية الهلال',
-                cityName: 'وسط البلد',
-                addressDetail: 'وسط البلد، 11 شارع رمسيس',
-                phone: '01055555555',
-                isOpen24h: false,
-                averageRating: 4.0,
-                reviewsCount: 88,
-                description: 'صيدلية في قلب القاهرة. ساعات عمل ممتدة.',
-                lat: 30.0500,
-                lng: 31.2333
-            }
-        ];
-
-        const mockInventory = [
-            { medicineId: 'm1', medicineNameAr: 'بنادول أدفانس', brand: 'Panadol', price: 25, stockQuantity: 50 },
-            { medicineId: 'm2', medicineNameAr: 'فولتارين جل', brand: 'Voltaren', price: 55, stockQuantity: 30 },
-            { medicineId: 'm3', medicineNameAr: 'فيتامين سي 1000', brand: 'Vitamin C', price: 45, stockQuantity: 0 },
-            { medicineId: 'm4', medicineNameAr: 'بيتادين', brand: 'Betadine', price: 22, stockQuantity: 100 },
-            { medicineId: 'm5', medicineNameAr: 'واقي شمس', brand: 'La Roche-Posay', price: 350, stockQuantity: 15 },
-            { medicineId: 'm6', medicineNameAr: 'أوميغا 3', brand: 'Omega-3', price: 120, stockQuantity: 40 },
-            { medicineId: 'm7', medicineNameAr: 'مضاد حيوي', brand: 'Augmentin', price: 85, stockQuantity: 25 },
-            { medicineId: 'm8', medicineNameAr: 'مسكن ألم', brand: 'Brufen', price: 18, stockQuantity: 60 },
-        ];
-
-        const mockReviews = [
-            { patientName: 'أحمد الشاذلي', rating: 5, text: 'خدمة ممتازة وسريعة جداً. الصيدلي كان متعاون جداً في شرح طريقة استخدام الدواء. أنصح الجميع بالتعامل معهم.', createdAt: '2026-05-10T10:30:00Z' },
-            { patientName: 'سارة القاضي', rating: 4, text: 'عندهم معظم منتجات العناية بالبشرة اللي كنت بدور عليها. السعر مناسب والجودة ممتازة.', createdAt: '2026-04-15T14:20:00Z' },
-            { patientName: 'محمد علي', rating: 5, text: 'أفضل صيدلية في المنطقة. التوصيل سريع والأسعار منافسة. شكراً لفريق العمل.', createdAt: '2026-03-20T09:00:00Z' },
-            { patientName: 'فاطمة أحمد', rating: 3, text: 'الخدمة جيدة لكن في أوقات الذروة بيكون الانتظار طويل شوية. ياريت يزودوا عدد الموظفين.', createdAt: '2026-02-10T16:45:00Z' },
-            { patientName: 'خالد محمود', rating: 5, text: 'صيدلية ممتازة ومتواجدة 24 ساعة. أنقذتني كذا مرة في وقت متأخر من الليل.', createdAt: '2026-01-05T22:15:00Z' },
-        ];
-
-        // ==================== State ====================
-        let currentPharmacy = null;
-        let map = null;
-
-        // ==================== Utility Functions ====================
-
-        function renderStars(rating) {
-            let stars = '';
-            const rounded = Math.round(rating || 0);
-            for (let i = 1; i <= 5; i++) {
-                stars += i <= rounded
-                    ? '<i class="bi bi-star-fill"></i>'
-                    : '<i class="bi bi-star"></i>';
-            }
-            return stars;
-        }
-
-        function formatPrice(price) {
-            if (!price && price !== 0) return '—';
-            return Number(price).toLocaleString('ar-EG') + ' ج.م';
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            if (diffDays <= 7) return 'قبل ' + diffDays + ' أيام';
-            if (diffDays <= 30) return 'قبل ' + Math.floor(diffDays / 7) + ' أسابيع';
-            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-        }
-
-        // ==================== Map Functions ====================
-
-        function initMap(lat, lng, name) {
-            if (!lat || !lng) {
-                // Default to Cairo if no coordinates
-                lat = 30.0444;
-                lng = 31.2357;
-            }
-
-            // Remove existing map if any
-            if (map) {
-                map.remove();
-            }
-
-            // Create map
-            map = L.map('pharmacyMap').setView([lat, lng], 15);
-
-            // Add tile layer (OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 19
-            }).addTo(map);
-
-            // Add marker
-            const marker = L.marker([lat, lng]).addTo(map);
-            marker.bindPopup('<b>' + name + '</b><br>اضغط للاتجاهات').openPopup();
-
-            // Click on marker opens directions
-            marker.on('click', function() {
-                getDirections();
-            });
-        }
-
-        function getDirections() {
-            if (!currentPharmacy) return;
-            const lat = currentPharmacy.lat || 30.0444;
-            const lng = currentPharmacy.lng || 31.2357;
-            const url = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
-            window.open(url, '_blank');
-        }
-
-        // ==================== Load Pharmacy Details ====================
-
-        async function loadPharmacyDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const pharmacyId = urlParams.get('id');
-
-            if (!pharmacyId) {
-                showError('لم يتم تحديد صيدلية');
-                return;
-            }
-
-            // Try API first, then fallback to mock data
-            let pharmacy = null;
-
-            try {
-                if (typeof api !== 'undefined' && api.getPharmacyById) {
-                    pharmacy = await api.getPharmacyById(pharmacyId);
-                }
-            } catch (err) {
-                console.log('API failed, using mock data');
-            }
-
-            if (!pharmacy) {
-                pharmacy = mockPharmacies.find(p => p.id === pharmacyId);
-            }
-
-            if (!pharmacy) {
-                showError('الصيدلية غير موجودة');
-                return;
-            }
-
-            currentPharmacy = pharmacy;
-            renderPharmacyDetails(pharmacy);
-
-            // Load additional data
-            await loadInventory(pharmacyId);
-            await loadReviews(pharmacyId);
-
-            // Initialize map
-            initMap(pharmacy.lat, pharmacy.lng, pharmacy.name);
-        }
-
-        // ==================== Render Pharmacy Details ====================
-
-        function renderPharmacyDetails(pharmacy) {
-            // Update page title
-            document.title = pharmacy.name + ' - صحتك';
-
-            // Breadcrumb
-            document.getElementById('pharmacyNameBreadcrumb').textContent = pharmacy.name;
-
-            // Hero section
-            document.getElementById('pharmacyName').textContent = pharmacy.name;
-
-            const fullAddress = (pharmacy.cityName || '') + (pharmacy.addressDetail ? '، ' + pharmacy.addressDetail : '');
-            document.getElementById('pharmacyAddress').textContent = fullAddress;
-
-            // Status badge
-            const statusBadge = document.getElementById('statusBadge');
-            if (pharmacy.isOpen24h) {
-                statusBadge.innerHTML = '<i class="bi bi-check-circle me-1"></i> مفتوح 24/7';
-                statusBadge.className = 'badge-24h';
-            } else {
-                statusBadge.innerHTML = '<i class="bi bi-clock me-1"></i> ساعات محددة';
-                statusBadge.className = 'badge-closed';
-            }
-
-            // Rating
-            const ratingHtml = renderStars(pharmacy.averageRating) + 
-                '<span class="rating-value ms-2">' + (pharmacy.averageRating || 0).toFixed(1) + '</span>' +
-                '<span class="rating-count">(' + (pharmacy.reviewsCount || 0).toLocaleString('ar-EG') + ' تقييم)</span>';
-            document.getElementById('pharmacyRating').innerHTML = ratingHtml;
-
-            // Phone button
-            const phoneBtn = document.getElementById('phoneBtn');
-            const phoneText = document.getElementById('phoneText');
-            if (pharmacy.phone) {
-                phoneBtn.href = 'tel:' + pharmacy.phone;
-                phoneText.textContent = pharmacy.phone;
-            } else {
-                phoneBtn.href = '#';
-                phoneText.textContent = 'لا يوجد رقم';
-                phoneBtn.style.opacity = '0.5';
-            }
-
-            // Description
-            document.getElementById('pharmacyDescription').textContent = 
-                pharmacy.description || 'صيدلية متكاملة توفر جميع الأدوية والمستلزمات الطبية.';
-
-            // Working hours
-            document.getElementById('workingHours').textContent = pharmacy.isOpen24h 
-                ? 'مفتوحة 24 ساعة طوال أيام الأسبوع'
-                : 'السبت - الخميس: 08:00 ص - 11:00 م | الجمعة: 10:00 ص - 11:00 م';
-
-            // Phone display
-            document.getElementById('phoneDisplay').textContent = pharmacy.phone || '—';
-
-            // Sidebar info
-            document.getElementById('sidebarName').textContent = pharmacy.name;
-            document.getElementById('sidebarCity').textContent = pharmacy.cityName || '—';
-            document.getElementById('sidebarStatus').textContent = pharmacy.isOpen24h ? 'مفتوح 24/7' : 'ساعات محددة';
-            document.getElementById('sidebarRating').innerHTML = renderStars(pharmacy.averageRating) + 
-                ' <span class="ms-1">' + (pharmacy.averageRating || 0).toFixed(1) + '</span>';
-
-            // Sidebar phone button
-            const sidebarPhoneBtn = document.getElementById('sidebarPhoneBtn');
-            if (pharmacy.phone) {
-                sidebarPhoneBtn.href = 'tel:' + pharmacy.phone;
-            } else {
-                sidebarPhoneBtn.style.display = 'none';
-            }
-        }
-
-        // ==================== Load Inventory ====================
-
-        async function loadInventory(pharmacyId) {
-            let inventory = [];
-
-            try {
-                if (typeof api !== 'undefined' && api.getPharmacyInventory) {
-                    inventory = await api.getPharmacyInventory(pharmacyId);
-                }
-            } catch (err) {
-                console.log('API inventory failed, using mock');
-            }
-
-            if (!inventory || inventory.length === 0) {
-                inventory = mockInventory;
-            }
-
-            renderInventory(inventory);
-        }
-
-        function renderInventory(inventory) {
-            document.getElementById('medicinesCount').textContent = inventory.length;
-
-            const container = document.getElementById('medicinesList');
-
-            if (inventory.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-4">
-                        <i class="bi bi-capsule text-muted fs-1 mb-2"></i>
-                        <p class="text-muted mb-0">لا توجد أدوية مسجلة حالياً</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = inventory.map(item => {
-                const inStock = (item.stockQuantity || 0) > 0;
-                return `
-                    <div class="medicine-item d-flex align-items-center gap-3">
-                        <div class="medicine-icon">
-                            <i class="bi bi-capsule text-white fs-5"></i>
-                        </div>
-                        <div class="flex-grow-1 min-w-0">
-                            <h6 class="fw-bold mb-1">${item.medicineNameAr || item.nameAr || 'دواء'}</h6>
-                            ${item.brand ? `<p class="text-muted small mb-0">${item.brand}</p>` : ''}
-                        </div>
-                        <div class="text-start flex-shrink-0">
-                            <span class="fw-bold text-primary">${formatPrice(item.price)}</span>
-                            <span class="d-block small ${inStock ? 'text-success' : 'text-danger'}">
-                                ${inStock 
-                                    ? '<i class="bi bi-check-circle"></i> متوفر (' + item.stockQuantity + ')' 
-                                    : '<i class="bi bi-x-circle"></i> نفذ'}
-                            </span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ==================== Load Reviews ====================
-
-        async function loadReviews(pharmacyId) {
-            let reviews = [];
-
-            try {
-                if (typeof api !== 'undefined' && api.getPharmacyReviews) {
-                    reviews = await api.getPharmacyReviews(pharmacyId);
-                }
-            } catch (err) {
-                console.log('API reviews failed, using mock');
-            }
-
-            if (!reviews || reviews.length === 0) {
-                reviews = mockReviews;
-            }
-
-            renderReviews(reviews);
-        }
-
-        function renderReviews(reviews) {
-            const container = document.getElementById('reviewsList');
-
-            // Calculate average
-            const avgRating = reviews.length > 0 
-                ? (reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length).toFixed(1)
-                : '0.0';
-
-            // Update header stats
-            document.getElementById('headerStars').innerHTML = renderStars(parseFloat(avgRating));
-            document.getElementById('headerRating').textContent = avgRating;
-            document.getElementById('headerReviewCount').textContent = reviews.length;
-
-            if (reviews.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-4">
-                        <i class="bi bi-chat-square-text text-muted fs-1 mb-2"></i>
-                        <p class="text-muted mb-0">لا توجد تقييمات بعد. كن أول من يقيم!</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = reviews.map(review => `
-                <div class="review-item">
-                    <div class="d-flex gap-3">
-                        <div class="review-avatar">
-                            ${(review.patientName || 'م').charAt(0)}
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <div>
-                                    <h6 class="fw-bold mb-1">${review.patientName || 'مريض'}</h6>
-                                    <div class="rating-stars">
-                                        ${renderStars(review.rating)}
-                                    </div>
-                                </div>
-                                <span class="text-muted small">${formatDate(review.createdAt)}</span>
-                            </div>
-                            ${review.text || review.comment ? `
-                                <p class="text-muted mb-0">${review.text || review.comment}</p>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ==================== Error Handling ====================
-
-        function showError(message) {
-            document.body.innerHTML = `
-                <div class="container mt-5">
-                    <div class="alert alert-danger rounded-4">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        ${message}
-                        <br><br>
-                        <a href="pharmacies.html" class="btn btn-primary rounded-pill">
-                            <i class="bi bi-arrow-right me-1"></i>
-                            العودة للصيدليات
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ==================== Auth UI ====================
-
-        function updateAuthUI() {
-            const authButtons = document.getElementById('authButtons');
-            if (!authButtons) return;
-
-            const token = localStorage.getItem('auth_token');
-
-            if (token) {
-                let user = null;
-                try {
-                    const stored = localStorage.getItem('auth_user');
-                    if (stored) user = JSON.parse(stored);
-                } catch (e) {}
-
-                const initial = user ? (user.fullName || user.email || '؟').charAt(0).toUpperCase() : '؟';
-                const name = user ? (user.fullName || 'حسابي') : 'حسابي';
-
-                authButtons.innerHTML = `
-                    <div class="dropdown">
-                        <button class="btn btn-light rounded-pill dropdown-toggle d-flex align-items-center gap-2" 
-                                type="button" data-bs-toggle="dropdown">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                                 style="width:32px;height:32px;font-size:0.85rem;font-weight:600;">
-                                ${initial}
-                            </div>
-                            <span class="d-none d-sm-inline">${name}</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="dashboard.html">
-                                <i class="bi bi-speedometer2 me-2"></i>لوحة التحكم
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" 
-                                   onclick="if(window.api) api.logout(); else { localStorage.removeItem('auth_token'); localStorage.removeItem('auth_user'); window.location.href='index.html'; } return false;">
-                                <i class="bi bi-box-arrow-right me-2"></i>تسجيل الخروج
-                            </a></li>
-                        </ul>
-                    </div>
-                `;
-            } else {
-                authButtons.innerHTML = `
-                    <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
-                    <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
-                `;
-            }
-        }
-
-        // ==================== Initialize ====================
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateAuthUI();
-            loadPharmacyDetails();
-        });
-    </script>
+    <script src="js/pharmacy-details.js"></script>
 </body>
 </html>

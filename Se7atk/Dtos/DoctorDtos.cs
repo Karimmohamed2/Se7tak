@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace Se7atk.Dtos
 {
@@ -54,5 +53,15 @@ namespace Se7atk.Dtos
         public decimal? MaxPrice { get; set; }
         public int? MinExperience { get; set; }
         public string? SearchName { get; set; }
+    }
+
+    // DTO خاص بالتقييمات
+    public class ReviewDto
+    {
+        public Guid Id { get; set; }
+        public string PatientName { get; set; } = null!;
+        public int Rating { get; set; }
+        public string? Text { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

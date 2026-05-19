@@ -22,17 +22,22 @@ namespace Se7atk.Services
             _context = context;
         }
 
-        // ── Book ─────────────────────────────────────────────
-        public async Task<BookingResponse> BookAppointmentAsync(
-            Guid patientId, BookingRequest request)
+      
+        //  حجز موعد جديد
+      
+        public async Task<BookingResponse> BookAppointmentAsync(Guid patientId, BookingRequest request)
         {
             var slot = await _context.AvailabilitySlots
                 .Include(s => s.Doctor)
-                .ThenInclude(d => d.Specialty)
+                .ThenInclude(d => d.User)
                 .FirstOrDefaultAsync(s => s.Id == request.SlotId);
 
             if (slot == null)
                 return new BookingResponse { Message = "الموعد غير موجود" };
+
+            // نمنع الحجز إذا كان الطبيب غير معتمد
+            if (!slot.Doctor.IsApproved)
+                return new BookingResponse { Message = "الطبيب غير معتمد بعد" };
 
             var existingBooking = await _context.Appointments
                 .AnyAsync(a => a.SlotId == request.SlotId
@@ -69,7 +74,9 @@ namespace Se7atk.Services
             };
         }
 
-        // ── Patient Appointments ──────────────────────────────
+     
+        //  مواعيد المريض
+     
         public async Task<List<AppointmentListDto>> GetPatientAppointmentsAsync(Guid patientId)
         {
             var appointments = await _context.Appointments
@@ -96,14 +103,15 @@ namespace Se7atk.Services
             }).ToList();
         }
 
-        // ── Doctor Appointments ───────────────────────────────
+        //  مواعيد الطبيب (مع أسماء المرضى)
+
         public async Task<List<AppointmentListDto>> GetDoctorAppointmentsAsync(Guid doctorId)
         {
             var appointments = await _context.Appointments
                 .Include(a => a.Patient)
                     .ThenInclude(p => p.User)
-                .Include(a => a.Doctor)          // ← كان ناقص
-                    .ThenInclude(d => d.User)    // ← كان ناقص
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.User)
                 .Include(a => a.Doctor)
                     .ThenInclude(d => d.Specialty)
                 .Include(a => a.Slot)
@@ -126,7 +134,8 @@ namespace Se7atk.Services
             }).ToList();
         }
 
-        // ── Cancel ───────────────────────────────────────────
+        //  إلغاء موعد
+  
         public async Task<bool> CancelAppointmentAsync(Guid appointmentId, Guid userId)
         {
             var appointment = await _context.Appointments
@@ -145,7 +154,9 @@ namespace Se7atk.Services
             return true;
         }
 
-        // ── Get By Id ────────────────────────────────────────
+       
+        //  جلب تفاصيل موعد معين
+  
         public async Task<AppointmentDetailDto?> GetAppointmentByIdAsync(Guid id)
         {
             var appointment = await _context.Appointments

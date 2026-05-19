@@ -1,13 +1,10 @@
 // ==================== Doctor Details Page Logic ====================
-
-// State
 let currentDoctor = null;
 let selectedSlot = null;
 let availableSlots = [];
 let doctorReviews = [];
 
 // ==================== Utility Functions ====================
-
 function getUrlParam(name) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name);
@@ -32,8 +29,23 @@ function getPeriodLabel(dateStr) {
     return hour < 14 ? 'صباحاً' : 'مساءً';
 }
 
-// ==================== Load Doctor Data ====================
+function formatPrice(price) {
+    if (!price && price !== 0) return '—';
+    return `${Number(price).toFixed(Number(price) % 1 === 0 ? 0 : 2)} ج.م`;
+}
 
+function renderStars(rating) {
+    let stars = '';
+    const rounded = Math.round(rating || 0);
+    for (let i = 1; i <= 5; i++) {
+        stars += i <= rounded
+            ? '<i class="bi bi-star-fill text-warning"></i>'
+            : '<i class="bi bi-star text-muted"></i>';
+    }
+    return stars;
+}
+
+// ==================== Load Doctor Data ====================
 async function loadDoctorDetails() {
     const doctorId = getUrlParam('id');
     
@@ -43,10 +55,7 @@ async function loadDoctorDetails() {
     }
 
     try {
-        // Show loading
         showLoadingState();
-        
-        // Load doctor data
         currentDoctor = await api.getDoctorById(doctorId);
         
         if (!currentDoctor) {
@@ -54,16 +63,9 @@ async function loadDoctorDetails() {
             return;
         }
 
-        // Render doctor info
         renderDoctorInfo(currentDoctor);
-        
-        // Load and render reviews
         await loadDoctorReviews(doctorId);
-        
-        // Generate date selector
         generateDateSelector();
-        
-        // Load slots for today
         const today = new Date().toISOString().split('T')[0];
         await loadSlots(doctorId, today);
         
@@ -96,27 +98,20 @@ function showError(message) {
 }
 
 // ==================== Render Doctor Info ====================
-
 function renderDoctorInfo(doctor) {
-    // Update page title
     document.title = `${doctor.fullName} - صحتك`;
-    
-    // Breadcrumb
     document.getElementById('doctorNameBreadcrumb').textContent = doctor.fullName || 'طبيب';
     
-    // Avatar
     const avatarEl = document.getElementById('doctorAvatar');
     avatarEl.style.backgroundColor = doctor.avatarColor || '#1E88E5';
     avatarEl.textContent = doctor.initials || doctor.fullName?.charAt(0) || 'د';
     avatarEl.className = 'doctor-avatar-lg flex-shrink-0 d-flex align-items-center justify-content-center text-white fw-bold';
     
-    // Basic info
     document.getElementById('doctorFullName').textContent = doctor.fullName || '—';
     document.getElementById('doctorSpecialty').textContent = doctor.specialtyName || '—';
     document.getElementById('doctorExperience').textContent = `${doctor.yearsOfExperience || 0} سنة خبرة`;
     document.getElementById('doctorCity').textContent = doctor.cityName || '—';
     
-    // Rating
     const ratingEl = document.getElementById('doctorRating');
     ratingEl.innerHTML = `
         ${renderStars(doctor.rating)}
@@ -124,16 +119,10 @@ function renderDoctorInfo(doctor) {
         <span class="rating-count">(${(doctor.reviewCount || 0).toLocaleString('ar-EG')} تقييم)</span>
     `;
     
-    // Bio
     document.getElementById('doctorBio').textContent = doctor.bio || 'لا توجد نبذة متاحة عن هذا الطبيب.';
-    
-    // Clinic address
     document.getElementById('clinicAddress').textContent = doctor.clinicAddress || doctor.cityName || '—';
-    
-    // Sidebar price
     document.getElementById('sidebarPrice').textContent = formatPrice(doctor.price);
     
-    // Breadcrumb link
     const breadcrumbLink = document.getElementById('doctorBreadcrumbLink');
     if (breadcrumbLink) {
         breadcrumbLink.textContent = doctor.fullName || '...';
@@ -142,7 +131,6 @@ function renderDoctorInfo(doctor) {
 }
 
 // ==================== Reviews ====================
-
 async function loadDoctorReviews(doctorId) {
     try {
         doctorReviews = await api.getDoctorReviews(doctorId);
@@ -187,8 +175,13 @@ function renderReviews(reviews) {
     `).join('');
 }
 
-// ==================== Date & Slots Selection ====================
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
+// ==================== Date & Slots Selection ====================
 function generateDateSelector() {
     const container = document.getElementById('dateSelector');
     if (!container) return;
@@ -196,7 +189,6 @@ function generateDateSelector() {
     const days = [];
     const today = new Date();
     
-    // Generate next 7 days
     for (let i = 0; i < 7; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
@@ -217,14 +209,12 @@ function generateDateSelector() {
         </button>
     `).join('');
     
-    // Store first date as selected
     if (days.length > 0) {
         container.dataset.selectedDate = days[0].dateStr;
     }
 }
 
 async function selectDate(dateStr, btnElement) {
-    // Update active state
     document.querySelectorAll('#dateSelector .btn').forEach(btn => {
         btn.classList.remove('active', 'btn-primary');
         btn.classList.add('btn-outline-primary');
@@ -237,7 +227,6 @@ async function selectDate(dateStr, btnElement) {
     
     document.getElementById('dateSelector').dataset.selectedDate = dateStr;
     
-    // Load slots for this date
     if (currentDoctor) {
         await loadSlots(currentDoctor.id, dateStr);
     }
@@ -255,7 +244,7 @@ async function loadSlots(doctorId, date) {
     
     try {
         const slots = await api.getDoctorSlots(doctorId, date);
-        availableSlots = slots || [];
+        availableSlots = slots.filter(s => !s.booked);
         renderSlots(availableSlots);
     } catch (err) {
         console.error('Failed to load slots:', err);
@@ -281,7 +270,6 @@ function renderSlots(slots) {
         return;
     }
     
-    // Group by period (morning/evening)
     const morning = slots.filter(s => new Date(s.startTime).getHours() < 14);
     const evening = slots.filter(s => new Date(s.startTime).getHours() >= 14);
     
@@ -332,7 +320,6 @@ function selectSlot(slotId) {
     
     if (!selectedSlot) return;
     
-    // Update UI
     document.querySelectorAll('#slotsContainer .btn').forEach(btn => {
         if (!btn.disabled) {
             btn.classList.remove('btn-primary');
@@ -346,7 +333,6 @@ function selectSlot(slotId) {
         selectedBtn.classList.add('btn-primary');
     }
     
-    // Update book button
     const bookBtn = document.getElementById('bookBtn');
     bookBtn.disabled = false;
     bookBtn.textContent = 'احجز الآن';
@@ -354,7 +340,6 @@ function selectSlot(slotId) {
 }
 
 // ==================== Navigate to Booking ====================
-
 function goToBooking() {
     if (!currentDoctor || !selectedSlot) {
         showToast('يرجى اختيار موعد أولاً', 'warning');
@@ -370,7 +355,6 @@ function goToBooking() {
 }
 
 // ==================== Toast ====================
-
 function showToast(message, type = 'info') {
     let container = document.getElementById('toastContainer');
     if (!container) {
@@ -413,8 +397,12 @@ function showToast(message, type = 'info') {
 }
 
 // ==================== Initialize ====================
-
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthUI();
     loadDoctorDetails();
 });
+
+// Make functions globally accessible for onclick handlers
+window.selectDate = selectDate;
+window.selectSlot = selectSlot;
+window.goToBooking = goToBooking;

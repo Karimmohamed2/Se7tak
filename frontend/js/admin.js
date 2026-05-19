@@ -1,29 +1,26 @@
-
-
+// ==================== Admin Module ====================
 import { api, getToken, API_BASE_URL } from './api.js';
 import { isAdmin, showToast } from './auth.js';
-
 
 let pendingDoctors = [];
 let approvedDoctors = [];
 let allUsers = [];
+let allAppointments = [];
 let currentStats = {};
+let currentAppointmentFilter = 'all';
 
 // ==================== Auth Guard ====================
-
 function requireAdmin() {
     const token = getToken();
     if (!token) {
         window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.href);
         return false;
     }
-
     // Will be verified by API, but check locally first
     return true;
 }
 
 // ==================== Statistics ====================
-
 async function loadStats() {
     const container = document.getElementById('statsCards');
     if (!container) return;
@@ -47,51 +44,17 @@ async function loadStats() {
     }
 }
 
-/**
- * Render statistics cards
- * @param {Object} stats - Statistics object
- */
 function renderStats(stats) {
     const container = document.getElementById('statsCards');
     if (!container) return;
 
     const cards = [
-        {
-            icon: 'bi-people',
-            color: 'primary',
-            value: stats.totalUsers || 0,
-            label: 'إجمالي المستخدمين'
-        },
-        {
-            icon: 'bi-person-check',
-            color: 'success',
-            value: stats.approvedDoctors || 0,
-            label: 'أطباء معتمدون'
-        },
-        {
-            icon: 'bi-person-x',
-            color: 'warning',
-            value: stats.pendingDoctors || 0,
-            label: 'بانتظار الموافقة'
-        },
-        {
-            icon: 'bi-calendar-event',
-            color: 'info',
-            value: stats.totalAppointments || 0,
-            label: 'إجمالي المواعيد'
-        },
-        {
-            icon: 'bi-shop',
-            color: 'secondary',
-            value: stats.totalPharmacies || 0,
-            label: 'الصيدليات'
-        },
-        {
-            icon: 'bi-capsule',
-            color: 'dark',
-            value: stats.totalMedicines || 0,
-            label: 'الأدوية'
-        }
+        { icon: 'bi-people', color: 'primary', value: stats.totalUsers || 0, label: 'إجمالي المستخدمين' },
+        { icon: 'bi-person-check', color: 'success', value: stats.approvedDoctors || 0, label: 'أطباء معتمدون' },
+        { icon: 'bi-person-x', color: 'warning', value: stats.pendingDoctors || 0, label: 'بانتظار الموافقة' },
+        { icon: 'bi-calendar-event', color: 'info', value: stats.totalAppointments || 0, label: 'إجمالي المواعيد' },
+        { icon: 'bi-shop', color: 'secondary', value: stats.totalPharmacies || 0, label: 'الصيدليات' },
+        { icon: 'bi-capsule', color: 'dark', value: stats.totalMedicines || 0, label: 'الأدوية' }
     ];
 
     container.innerHTML = cards.map(card => `
@@ -110,10 +73,6 @@ function renderStats(stats) {
 }
 
 // ==================== Pending Doctors ====================
-
-/**
- * Load pending doctors list
- */
 async function loadPendingDoctors() {
     const container = document.getElementById('pendingDoctorsList');
     if (!container) return;
@@ -137,10 +96,6 @@ async function loadPendingDoctors() {
     }
 }
 
-/**
- * Render pending doctors table/cards
- * @param {Array} doctors - Array of pending doctor objects
- */
 function renderPendingDoctors(doctors) {
     const container = document.getElementById('pendingDoctorsList');
     const countEl = document.getElementById('pendingCount');
@@ -215,9 +170,6 @@ function renderPendingDoctors(doctors) {
     attachDoctorActionListeners();
 }
 
-/**
- * Load approved doctors list
- */
 async function loadApprovedDoctors() {
     const container = document.getElementById('approvedDoctorsList');
     if (!container) return;
@@ -241,10 +193,6 @@ async function loadApprovedDoctors() {
     }
 }
 
-/**
- * Render approved doctors
- * @param {Array} doctors - Array of approved doctor objects
- */
 function renderApprovedDoctors(doctors) {
     const container = document.getElementById('approvedDoctorsList');
     const countEl = document.getElementById('approvedCount');
@@ -317,7 +265,7 @@ function renderApprovedDoctors(doctors) {
                                         </li>
                                     </ul>
                                 </div>
-                            </td>
+                             </td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -329,11 +277,6 @@ function renderApprovedDoctors(doctors) {
 }
 
 // ==================== Doctor Actions ====================
-
-/**
- * Approve doctor
- * @param {string} doctorId - Doctor ID
- */
 async function approveDoctor(doctorId) {
     if (!confirm('هل أنت متأكد من اعتماد هذا الطبيب؟')) return;
 
@@ -353,8 +296,6 @@ async function approveDoctor(doctorId) {
         }
 
         showToast('تم اعتماد الطبيب بنجاح', 'success');
-
-        // Refresh lists
         loadPendingDoctors();
         loadApprovedDoctors();
         loadStats();
@@ -365,10 +306,6 @@ async function approveDoctor(doctorId) {
     }
 }
 
-/**
- * Reject doctor
- * @param {string} doctorId - Doctor ID
- */
 async function rejectDoctor(doctorId) {
     if (!confirm('هل أنت متأكد من رفض هذا الطبيب؟')) return;
 
@@ -397,10 +334,6 @@ async function rejectDoctor(doctorId) {
     }
 }
 
-/**
- * Revoke doctor approval
- * @param {string} doctorId - Doctor ID
- */
 async function revokeDoctor(doctorId) {
     if (!confirm('هل أنت متأكد من إلغاء اعتماد هذا الطبيب؟')) return;
 
@@ -431,10 +364,6 @@ async function revokeDoctor(doctorId) {
 }
 
 // ==================== Users Management ====================
-
-/**
- * Load all users
- */
 async function loadUsers() {
     const container = document.getElementById('usersList');
     if (!container) return;
@@ -456,10 +385,6 @@ async function loadUsers() {
     }
 }
 
-/**
- * Render users table
- * @param {Array} users - Array of user objects
- */
 function renderUsers(users) {
     const container = document.getElementById('usersList');
     const countEl = document.getElementById('usersCount');
@@ -510,18 +435,18 @@ function renderUsers(users) {
                                         </div>
                                         <span class="fw-semibold">${user.fullName || '—'}</span>
                                     </div>
-                                </td>
+                                 </td>
                                 <td>${user.email}</td>
                                 <td>${user.phone || '—'}</td>
                                 <td>
                                     <span class="badge ${role.class} rounded-pill">${role.text}</span>
-                                </td>
+                                 </td>
                                 <td>
                                     ${user.isActive 
                                         ? '<span class="badge bg-success bg-opacity-10 text-success rounded-pill">مفعل</span>'
                                         : '<span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">غير مفعل</span>'
                                     }
-                                </td>
+                                 </td>
                                 <td>${formatDate(user.createdAt)}</td>
                                 <td>
                                     <button class="btn btn-sm ${user.isActive ? 'btn-outline-danger' : 'btn-outline-success'} rounded-pill toggle-user" data-id="${user.id}">
@@ -530,7 +455,7 @@ function renderUsers(users) {
                                             : '<i class="bi bi-check-circle"></i> تفعيل'
                                         }
                                     </button>
-                                </td>
+                                 </td>
                             </tr>
                         `;
                     }).join('')}
@@ -542,10 +467,6 @@ function renderUsers(users) {
     attachUserActionListeners();
 }
 
-/**
- * Toggle user active status
- * @param {string} userId - User ID
- */
 async function toggleUserStatus(userId) {
     try {
         const token = getToken();
@@ -572,13 +493,123 @@ async function toggleUserStatus(userId) {
     }
 }
 
-// ==================== Event Listeners ====================
+// ==================== Appointments Management (Admin) ====================
+async function loadAllAppointments() {
+    const container = document.getElementById('allAppointmentsList');
+    if (!container) return;
 
-/**
- * Attach doctor action listeners
- */
+    showLoading(container);
+
+    try {
+        const appointments = await api.getAllAppointments();
+        allAppointments = appointments;
+        renderAllAppointments(appointments);
+        setupAppointmentFilters();
+    } catch (err) {
+        console.error('Failed to load appointments:', err);
+        container.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                حدث خطأ أثناء تحميل المواعيد
+            </div>
+        `;
+    }
+}
+
+function renderAllAppointments(appointments, filter = 'all') {
+    const container = document.getElementById('allAppointmentsList');
+    const countEl = document.getElementById('appointmentsCount');
+    
+    let filtered = appointments;
+    if (filter !== 'all') {
+        filtered = appointments.filter(a => a.status === filter);
+    }
+
+    if (countEl) countEl.textContent = filtered.length;
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state py-5">
+                <div class="empty-state-icon">
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                </div>
+                <p class="empty-state-title">لا توجد مواعيد</p>
+                <p class="empty-state-description">لا توجد مواعيد ${filter !== 'all' ? 'بهذه الحالة' : ''}</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>الطبيب</th>
+                        <th>المريض</th>
+                        <th>التخصص</th>
+                        <th>التاريخ والوقت</th>
+                        <th>السعر</th>
+                        <th>الحالة</th>
+                        <th>ملاحظات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filtered.map(apt => `
+                        <tr>
+                            <td>${apt.doctorName || '—'}</td>
+                            <td>${apt.patientName || '—'}</td>
+                            <td>${apt.specialty || '—'}</td>
+                            <td>${formatDateTime(apt.startTime)}</td>
+                            <td>${formatPrice(apt.price)}</td>
+                            <td><span class="status-badge status-${apt.status}">${getStatusLabel(apt.status)}</span></td>
+                            <td>${apt.notes || ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function setupAppointmentFilters() {
+    const filterBtns = document.querySelectorAll('.appointment-filter-btn');
+    if (!filterBtns.length) return;
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter || 'all';
+            renderAllAppointments(allAppointments, filter);
+        });
+    });
+}
+
+function getStatusLabel(status) {
+    const labels = {
+        pending: 'معلق',
+        confirmed: 'مؤكد',
+        completed: 'مكتمل',
+        cancelled: 'ملغي'
+    };
+    return labels[status] || status;
+}
+
+function formatDateTime(dateStr) {
+    if (!dateStr) return '—';
+    const date = new Date(dateStr);
+    return date.toLocaleString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// ==================== Event Listeners ====================
 function attachDoctorActionListeners() {
-    // Approve buttons
     document.querySelectorAll('.approve-doctor').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const id = e.currentTarget.dataset.id;
@@ -586,7 +617,6 @@ function attachDoctorActionListeners() {
         });
     });
 
-    // Reject buttons
     document.querySelectorAll('.reject-doctor').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const id = e.currentTarget.dataset.id;
@@ -594,7 +624,6 @@ function attachDoctorActionListeners() {
         });
     });
 
-    // View details buttons
     document.querySelectorAll('.view-details').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const id = e.currentTarget.dataset.id;
@@ -603,9 +632,6 @@ function attachDoctorActionListeners() {
     });
 }
 
-/**
- * Attach revoke listeners
- */
 function attachRevokeListeners() {
     document.querySelectorAll('.revoke-doctor').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -615,9 +641,6 @@ function attachRevokeListeners() {
     });
 }
 
-/**
- * Attach user action listeners
- */
 function attachUserActionListeners() {
     document.querySelectorAll('.toggle-user').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -627,66 +650,7 @@ function attachUserActionListeners() {
     });
 }
 
-// ==================== Search & Filter ====================
-
-/**
- * Initialize user search
- */
-function initUserSearch() {
-    const searchInput = document.getElementById('userSearch');
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', debounce((e) => {
-        const query = e.target.value.trim().toLowerCase();
-
-        if (!query) {
-            renderUsers(allUsers);
-            return;
-        }
-
-        const filtered = allUsers.filter(user => 
-            (user.fullName || '').toLowerCase().includes(query) ||
-            (user.email || '').toLowerCase().includes(query) ||
-            (user.phone || '').includes(query)
-        );
-
-        renderUsers(filtered);
-    }, 300));
-}
-
-/**
- * Initialize doctor search
- */
-function initDoctorSearch() {
-    const searchInput = document.getElementById('doctorSearch');
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', debounce((e) => {
-        const query = e.target.value.trim().toLowerCase();
-
-        if (!query) {
-            renderPendingDoctors(pendingDoctors);
-            return;
-        }
-
-        const filtered = pendingDoctors.filter(doc => 
-            (doc.fullName || '').toLowerCase().includes(query) ||
-            (doc.specialtyName || '').toLowerCase().includes(query) ||
-            (doc.email || '').toLowerCase().includes(query)
-        );
-
-        renderPendingDoctors(filtered);
-    }, 300));
-}
-
 // ==================== Utility Functions ====================
-
-/**
- * Debounce function
- * @param {Function} func - Function to debounce
- * @param {number} wait - Wait time in ms
- * @returns {Function}
- */
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -699,10 +663,6 @@ function debounce(func, wait) {
     };
 }
 
-/**
- * Show loading state
- * @param {HTMLElement} container - Container element
- */
 function showLoading(container) {
     container.innerHTML = `
         <div class="text-center py-5">
@@ -714,11 +674,6 @@ function showLoading(container) {
     `;
 }
 
-/**
- * Format date
- * @param {string} dateString - ISO date string
- * @returns {string}
- */
 function formatDate(dateString) {
     if (!dateString) return '—';
     const date = new Date(dateString);
@@ -729,44 +684,70 @@ function formatDate(dateString) {
     });
 }
 
-/**
- * Format price
- * @param {number} price - Price value
- * @returns {string}
- */
 function formatPrice(price) {
+    if (!price && price !== 0) return '—';
     return `${price.toFixed(price % 1 === 0 ? 0 : 2)} ج.م`;
 }
 
-// ==================== Initialize ====================
+// ==================== Search & Filter ====================
+function initUserSearch() {
+    const searchInput = document.getElementById('userSearch');
+    if (!searchInput) return;
 
-/**
- * Initialize admin module based on current page
- */
+    searchInput.addEventListener('input', debounce((e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) {
+            renderUsers(allUsers);
+            return;
+        }
+        const filtered = allUsers.filter(user => 
+            (user.fullName || '').toLowerCase().includes(query) ||
+            (user.email || '').toLowerCase().includes(query) ||
+            (user.phone || '').includes(query)
+        );
+        renderUsers(filtered);
+    }, 300));
+}
+
+function initDoctorSearch() {
+    const searchInput = document.getElementById('doctorSearch');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', debounce((e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (!query) {
+            renderPendingDoctors(pendingDoctors);
+            return;
+        }
+        const filtered = pendingDoctors.filter(doc => 
+            (doc.fullName || '').toLowerCase().includes(query) ||
+            (doc.specialtyName || '').toLowerCase().includes(query) ||
+            (doc.email || '').toLowerCase().includes(query)
+        );
+        renderPendingDoctors(filtered);
+    }, 300));
+}
+
+// ==================== Initialize ====================
 function init() {
     if (!requireAdmin()) return;
 
     const path = window.location.pathname;
 
     if (path.includes('admin-dashboard.html') || path.includes('admin.html')) {
-        // Main admin dashboard
         loadStats();
         loadPendingDoctors();
-
+        loadAllAppointments(); // Load appointments for admin
     } else if (path.includes('admin-doctors.html')) {
-        // Doctors management page
         loadPendingDoctors();
         loadApprovedDoctors();
         initDoctorSearch();
-
     } else if (path.includes('admin-users.html')) {
-        // Users management page
         loadUsers();
         initUserSearch();
     }
 }
 
-// Run on DOM ready
 document.addEventListener('DOMContentLoaded', init);
 
 // Export for use in other modules
@@ -775,6 +756,7 @@ export {
     loadPendingDoctors,
     loadApprovedDoctors,
     loadUsers,
+    loadAllAppointments,
     approveDoctor,
     rejectDoctor,
     revokeDoctor,

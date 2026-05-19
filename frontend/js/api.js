@@ -134,6 +134,7 @@ function transformAppointment(a) {
         specialty: a.specialty || a.doctor?.specialtyName || '',
         status: (a.status || 'pending').toLowerCase(),
         price: a.price || a.consultationFee || 0,
+        notes: a.notes || ''
     };
 }
 
@@ -199,6 +200,32 @@ const api = {
         const query = date ? `?date=${date}` : '';
         const data = await apiFetch(`/doctors/${doctorId}/slots${query}`);
         return (data || []).map(transformSlot);
+    },
+
+    // ─── Doctor Appointments Management (new) ─────────────────
+   async getDoctorAppointments() {
+    const data = await apiFetch('/booking/doctor-appointments');
+    return (data || []).map(transformAppointment);
+},
+
+    async updateAppointmentStatus(appointmentId, status) {
+        return apiFetch(`/doctors/appointments/${appointmentId}/status`, {
+            method: 'PUT',
+            body: { status }
+        });
+    },
+
+    async addDoctorSlot(doctorId, startDateTime) {
+        return apiFetch(`/doctors/${doctorId}/slots`, {
+            method: 'POST',
+            body: { startTime: startDateTime }
+        });
+    },
+
+    async deleteDoctorSlot(slotId) {
+        return apiFetch(`/doctors/slots/${slotId}`, {
+            method: 'DELETE'
+        });
     },
 
     // ─── Doctor Reviews ──────────────────────────────────────
@@ -428,6 +455,12 @@ const api = {
 
     async toggleUserActive(userId) {
         return apiFetch(`/admin/users/${userId}/toggle-active`, { method: 'PUT' });
+    },
+
+    // ─── Admin Appointments Management ────────────────────────
+    async getAllAppointments() {
+        const data = await apiFetch('/admin/appointments');
+        return (data || []).map(transformAppointment);
     }
 };
 

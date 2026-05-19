@@ -60,10 +60,7 @@ function isPatient() {
     return hasRole('patient');
 }
 
-// ==================== API Calls (using apiFetch from api.js) ====================
-// Note: These use the apiFetch function defined in api.js
-// Make sure api.js is loaded before auth.js
-
+// ==================== API Calls ====================
 async function login(email, password) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
@@ -272,10 +269,7 @@ function showToast(message, type = 'info') {
     `;
 
     toastContainer.appendChild(toast);
-
-    setTimeout(() => {
-        toast.remove();
-    }, 4000);
+    setTimeout(() => toast.remove(), 4000);
 }
 
 function createToastContainer() {
@@ -290,15 +284,11 @@ function createToastContainer() {
 // ==================== Initialize ====================
 function init() {
     const path = window.location.pathname;
-
-    // Redirect if already logged in
     if (path.includes('login.html') || path.includes('register.html')) {
         if (isAuthenticated()) {
             window.location.href = 'dashboard.html';
         }
     }
-
-    // Fetch user data if token exists
     if (isAuthenticated() && !currentUser) {
         fetchCurrentUser();
     }

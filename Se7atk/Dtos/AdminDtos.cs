@@ -1,7 +1,7 @@
-﻿
+﻿using System;
+
 namespace Se7atk.Dtos
 {
-    
     public class PendingDoctorDto
     {
         public Guid Id { get; set; }
@@ -16,7 +16,6 @@ namespace Se7atk.Dtos
         public DateTime CreatedAt { get; set; }
     }
 
-    // إحصائيات لوحة التحكم
     public class AdminDashboardStats
     {
         public int TotalDoctors { get; set; }
@@ -28,7 +27,6 @@ namespace Se7atk.Dtos
         public decimal TotalRevenue { get; set; }
     }
 
-    // مستخدم في الليستة
     public class UserListDto
     {
         public Guid Id { get; set; }
@@ -38,5 +36,18 @@ namespace Se7atk.Dtos
         public string Role { get; set; } = null!;
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+    }
+
+    //  DTO للمواعيد في لوحة تحكم الأدمن
+    public class AdminAppointmentDto
+    {
+        public Guid Id { get; set; }
+        public string DoctorName { get; set; } = null!;
+        public string PatientName { get; set; } = null!;
+        public string Specialty { get; set; } = null!;
+        public DateTime StartTime { get; set; }
+        public decimal Price { get; set; }
+        public string Status { get; set; } = null!;
+        public string? Notes { get; set; }
     }
 }

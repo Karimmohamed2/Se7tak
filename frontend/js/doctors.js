@@ -40,7 +40,6 @@ function debounce(func, wait) {
 function initFilters() {
     const urlParams = getUrlParams();
     
-    // Set initial values from URL
     if (urlParams.specialty) {
         currentFilters.specialtyId = urlParams.specialty;
         const select = document.getElementById('filterSpecialty');
@@ -52,7 +51,6 @@ function initFilters() {
         if (select) select.value = urlParams.city;
     }
     
-    // Event listeners
     const nameSearch = document.getElementById('nameSearch');
     if (nameSearch) {
         nameSearch.addEventListener('input', debounce((e) => {
@@ -87,12 +85,9 @@ function initFilters() {
         });
     }
     
-    // Experience buttons
     document.querySelectorAll('.experience-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.experience-btn').forEach(b => {
-                b.classList.remove('active');
-            });
+            document.querySelectorAll('.experience-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentFilters.minExperience = parseInt(btn.dataset.value) || 0;
             applyFilters();
@@ -103,6 +98,15 @@ function initFilters() {
     if (sortBy) {
         sortBy.addEventListener('change', (e) => {
             currentFilters.sortBy = e.target.value;
+            applyFilters();
+        });
+    }
+    
+    const sortByMobile = document.getElementById('sortByMobile');
+    if (sortByMobile) {
+        sortByMobile.addEventListener('change', (e) => {
+            currentFilters.sortBy = e.target.value;
+            if (sortBy) sortBy.value = e.target.value;
             applyFilters();
         });
     }
@@ -135,14 +139,14 @@ function clearAllFilters() {
         if (priceValue) priceValue.textContent = 'حتى 1000 ج.م';
     }
     
-    document.querySelectorAll('.experience-btn').forEach(b => {
-        b.classList.remove('active');
-    });
+    document.querySelectorAll('.experience-btn').forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-value="0"]');
     if (allBtn) allBtn.classList.add('active');
     
     const sortBy = document.getElementById('sortBy');
     if (sortBy) sortBy.value = 'experience';
+    const sortByMobile = document.getElementById('sortByMobile');
+    if (sortByMobile) sortByMobile.value = 'experience';
     
     applyFilters();
 }
@@ -151,7 +155,6 @@ function clearAllFilters() {
 function applyFilters() {
     let filtered = [...allDoctors];
     
-    // Apply filters
     if (currentFilters.specialtyId) {
         filtered = filtered.filter(d => {
             const matchId = d.specialtyId === parseInt(currentFilters.specialtyId);
@@ -186,7 +189,6 @@ function applyFilters() {
         );
     }
     
-    // Sort
     filtered.sort((a, b) => {
         if (currentFilters.sortBy === 'price_asc') return (a.price || 0) - (b.price || 0);
         if (currentFilters.sortBy === 'price_desc') return (b.price || 0) - (a.price || 0);
@@ -214,7 +216,6 @@ function renderDoctorsList(doctors) {
     }
     
     if (emptyState) emptyState.classList.add('d-none');
-    
     if (!container) return;
     
     container.innerHTML = doctors.map(doc => `
@@ -262,6 +263,22 @@ function renderDoctorsList(doctors) {
     `).join('');
 }
 
+function renderStars(rating) {
+    let stars = '';
+    const rounded = Math.round(rating || 0);
+    for (let i = 1; i <= 5; i++) {
+        stars += i <= rounded
+            ? '<i class="bi bi-star-fill text-warning"></i>'
+            : '<i class="bi bi-star text-muted"></i>';
+    }
+    return stars;
+}
+
+function formatPrice(price) {
+    if (!price && price !== 0) return '—';
+    return `${Number(price).toFixed(Number(price) % 1 === 0 ? 0 : 2)} ج.م`;
+}
+
 // ==================== Update Filter UI ====================
 function updateFilterUI() {
     const hasFilters = currentFilters.specialtyId || currentFilters.cityId || 
@@ -272,7 +289,6 @@ function updateFilterUI() {
         clearBtn.style.display = hasFilters ? 'inline-flex' : 'none';
     }
     
-    // Update title
     const specSelect = document.getElementById('filterSpecialty');
     const specName = specSelect && specSelect.value ? specSelect.options[specSelect.selectedIndex].text : '';
     const citySelect = document.getElementById('filterCity');
@@ -303,7 +319,6 @@ async function loadSpecialties() {
                 specialties.map(s => `<option value="${s.id}">${s.name_ar}</option>`).join('');
         }
         
-        // Re-apply URL param
         const urlParams = getUrlParams();
         if (urlParams.specialty && select) {
             select.value = urlParams.specialty;
@@ -326,7 +341,6 @@ async function loadCities() {
                 cities.map(c => `<option value="${c.id}">${c.nameAr}</option>`).join('');
         }
         
-        // Re-apply URL param
         const urlParams = getUrlParams();
         if (urlParams.city && select) {
             select.value = urlParams.city;
@@ -361,15 +375,6 @@ async function loadDoctors() {
                 <div class="alert alert-danger">فشل تحميل الأطباء. حاول مرة أخرى.</div>
             `;
         }
-    }
-}
-
-// ==================== Update Price Label ====================
-function updatePriceLabel() {
-    const priceRange = document.getElementById('priceRange');
-    const priceValue = document.getElementById('priceValue');
-    if (priceRange && priceValue) {
-        priceValue.textContent = `حتى ${priceRange.value} ج.م`;
     }
 }
 

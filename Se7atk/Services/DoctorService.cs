@@ -1,5 +1,4 @@
-﻿// Se7atk/Services/DoctorService.cs
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Se7atk.Dtos;
 using Se7atk.Models;
 using System;
@@ -14,6 +13,7 @@ namespace Se7atk.Services
         Task<List<DoctorListDto>> SearchDoctorsAsync(DoctorSearchRequest request);
         Task<DoctorDetailDto?> GetDoctorByIdAsync(Guid id);
         Task<List<AvailabilitySlotDto>> GetDoctorSlotsAsync(Guid doctorId, DateTime? date);
+        Task<List<ReviewDto>> GetDoctorReviewsAsync(Guid doctorId); //  جديد
     }
 
     public class DoctorService : IDoctorService
@@ -33,23 +33,18 @@ namespace Se7atk.Services
                 .Include(d => d.City)
                 .AsQueryable();
 
-            // فلترة بالتخصص
             if (request.SpecialtyId.HasValue)
                 query = query.Where(d => d.SpecialtyId == request.SpecialtyId.Value);
 
-            // فلترة بالمدينة
             if (request.CityId.HasValue)
                 query = query.Where(d => d.CityId == request.CityId.Value);
 
-            // فلترة بالسعر الأقصى
             if (request.MaxPrice.HasValue)
                 query = query.Where(d => d.Price <= request.MaxPrice.Value);
 
-            // فلترة بسنوات الخبرة
             if (request.MinExperience.HasValue)
                 query = query.Where(d => d.YearsOfExperience >= request.MinExperience.Value);
 
-            // بحث بالاسم
             if (!string.IsNullOrWhiteSpace(request.SearchName))
             {
                 var search = request.SearchName.Trim().ToLower();
@@ -60,25 +55,34 @@ namespace Se7atk.Services
                 );
             }
 
-            // بس اللي معتمدين
             query = query.Where(d => d.IsApproved);
 
             var doctors = await query.ToListAsync();
 
-            return doctors.Select(d => new DoctorListDto
+            // حساب متوسط التقييمات وعددها (يمكن تحسين الأداء)
+            var result = new List<DoctorListDto>();
+            foreach (var d in doctors)
             {
-                Id = d.Id,
-                FullName = d.User.FullName,
-                SpecialtyName = d.Specialty.NameAr,
-                CityName = d.City?.NameAr,
-                Price = d.Price,
-                YearsOfExperience = d.YearsOfExperience ?? 0,
-                ClinicAddress = d.ClinicAddress,
-                Bio = d.Bio,
-                IsApproved = d.IsApproved,
-                AverageRating = 0,
-                ReviewsCount = 0
-            }).ToList();
+                var reviews = await _context.Reviews
+                    .Where(r => r.Appointment.DoctorId == d.Id)
+                    .ToListAsync();
+                var avgRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
+                result.Add(new DoctorListDto
+                {
+                    Id = d.Id,
+                    FullName = d.User.FullName,
+                    SpecialtyName = d.Specialty.NameAr,
+                    CityName = d.City?.NameAr,
+                    Price = d.Price,
+                    YearsOfExperience = d.YearsOfExperience ?? 0,
+                    ClinicAddress = d.ClinicAddress,
+                    Bio = d.Bio,
+                    IsApproved = d.IsApproved,
+                    AverageRating = avgRating,
+                    ReviewsCount = reviews.Count
+                });
+            }
+            return result;
         }
 
         public async Task<DoctorDetailDto?> GetDoctorByIdAsync(Guid id)
@@ -90,6 +94,11 @@ namespace Se7atk.Services
                 .FirstOrDefaultAsync(d => d.Id == id && d.IsApproved);
 
             if (doctor == null) return null;
+
+            var reviews = await _context.Reviews
+                .Where(r => r.Appointment.DoctorId == id)
+                .ToListAsync();
+            var avgRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
 
             return new DoctorDetailDto
             {
@@ -108,8 +117,8 @@ namespace Se7atk.Services
                 Latitude = doctor.Latitude,
                 Longitude = doctor.Longitude,
                 IsApproved = doctor.IsApproved,
-                AverageRating = 0,
-                ReviewsCount = 0
+                AverageRating = avgRating,
+                ReviewsCount = reviews.Count
             };
         }
 
@@ -119,7 +128,6 @@ namespace Se7atk.Services
                 .Where(s => s.DoctorId == doctorId)
                 .AsQueryable();
 
-            // لو محدد تاريخ، جيب المواعيد من اليوم ده
             if (date.HasValue)
             {
                 var startOfDay = date.Value.Date;
@@ -128,18 +136,14 @@ namespace Se7atk.Services
             }
             else
             {
-                // لو مش محدد، جيب من النهارده ورايح
                 var now = DateTime.Now;
                 query = query.Where(s => s.StartTime >= now);
             }
 
-            var slots = await query
-                .OrderBy(s => s.StartTime)
-                .ToListAsync();
+            var slots = await query.OrderBy(s => s.StartTime).ToListAsync();
 
-            // نشوف أي مواعيد محجوزة
             var bookedSlotIds = await _context.Appointments
-                .Where(a => slots.Select(s => s.Id).Contains(a.SlotId))
+                .Where(a => slots.Select(s => s.Id).Contains(a.SlotId) && a.Status != AppointmentStatus.Cancelled)
                 .Select(a => a.SlotId)
                 .ToListAsync();
 
@@ -150,6 +154,28 @@ namespace Se7atk.Services
                 EndTime = s.EndTime,
                 IsBooked = bookedSlotIds.Contains(s.Id)
             }).ToList();
+        }
+
+        //  جلب تقييمات الطبيب
+        public async Task<List<ReviewDto>> GetDoctorReviewsAsync(Guid doctorId)
+        {
+            var reviews = await _context.Reviews
+                .Include(r => r.Appointment)
+                    .ThenInclude(a => a.Patient)
+                    .ThenInclude(p => p.User)
+                .Where(r => r.Appointment.DoctorId == doctorId)
+                .OrderByDescending(r => r.CreatedAt)
+                .Select(r => new ReviewDto
+                {
+                    Id = r.Id,
+                    PatientName = r.Appointment.Patient.User.FullName,
+                    Rating = r.Rating,
+                    Text = r.Comment,
+                    CreatedAt = r.CreatedAt
+                })
+                .ToListAsync();
+
+            return reviews;
         }
     }
 }
