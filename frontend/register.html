@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب - صحتك</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .register-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+        }
+        .register-card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+        .register-hero {
+            background: linear-gradient(135deg, #1E88E5 0%, #2BB6E6 100%);
+            border-radius: 24px;
+            color: white;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-group-custom {
+            position: relative;
+        }
+        .input-group-custom .form-control {
+            padding-right: 3rem;
+            padding-left: 3rem;
+            height: 52px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .input-group-custom .form-control:focus {
+            border-color: #1E88E5;
+            box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1);
+        }
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            z-index: 10;
+        }
+        .toggle-password {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            z-index: 10;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .btn-register {
+            height: 52px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #1E88E5, #2BB6E6);
+            border: none;
+            box-shadow: 0 4px 16px rgba(30, 136, 229, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 136, 229, 0.4);
+        }
+        .role-selector {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.25rem;
+            background: #f1f5f9;
+            border-radius: 16px;
+        }
+        .role-btn {
+            flex: 1;
+            height: 48px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .role-btn.active {
+            background: white;
+            color: #1E88E5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .terms-check input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: #1E88E5;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-page d-flex align-items-center py-5">
+        <div class="container">
+            <div class="row g-4 align-items-start justify-content-center">
+                <!-- Hero Side -->
+                <div class="col-12 col-lg-5 d-none d-lg-block">
+                    <div class="register-hero p-5 h-100 d-flex flex-column justify-content-center">
+                        <div class="text-center mb-5">
+                            <div class="display-1 mb-4">👨‍⚕️</div>
+                            <div class="d-flex justify-content-center gap-1 mb-3">
+                                <i class="bi bi-star-fill text-warning fs-5"></i>
+                                <i class="bi bi-star-fill text-warning fs-5"></i>
+                                <i class="bi bi-star-fill text-warning fs-5"></i>
+                                <i class="bi bi-star-fill text-warning fs-5"></i>
+                                <i class="bi bi-star-fill text-warning fs-5"></i>
+                            </div>
+                            <p class="opacity-90 mb-3">"أفضل تجربة رعاية صحية حصلت عليها، التنظيم والمتابعة في صحتك مذهلة."</p>
+                            <p class="small opacity-60 mb-0">— د. أحمد خالد، مستخدم للمنصة</p>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
+                                    <div class="feature-icon"><i class="bi bi-shield-check fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">أمان تام</h6><p class="small opacity-75 mb-0">بياناتك محمية</p></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
+                                    <div class="feature-icon"><i class="bi bi-headset fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">دعم 24/7</h6><p class="small opacity-75 mb-0">فريقنا متاح</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="col-12 col-lg-5">
+                    <div class="card register-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <!-- Logo -->
+                            <div class="text-center mb-4">
+                                <a href="index.html" class="d-inline-flex align-items-center gap-2 text-decoration-none">
+                                    <div class="logo-icon" style="width: 48px; height: 48px;">
+                                        <i class="bi bi-shield-check"></i>
+                                        <i class="bi bi-activity"></i>
+                                    </div>
+                                    <span class="brand-text" style="font-size: 1.75rem;">صحتك<span class="brand-dot">.</span></span>
+                                </a>
+                            </div>
+
+                            <div class="text-center mb-4">
+                                <h2 class="fw-bold mb-2">إنشاء حساب جديد</h2>
+                                <p class="text-muted mb-0">انضم إلى منصة صحتك للحصول على أفضل رعاية طبية رقمية متكاملة</p>
+                            </div>
+
+                            <!-- Role Selector -->
+                            <div class="role-selector mb-4">
+                                <button type="button" class="role-btn active" id="rolePatient" onclick="selectRole('patient')">
+                                    <i class="bi bi-person me-1"></i> مريض
+                                </button>
+                                <button type="button" class="role-btn" id="roleDoctor" onclick="selectRole('doctor')">
+                                    <i class="bi bi-person-badge me-1"></i> طبيب
+                                </button>
+                            </div>
+
+                            <!-- Register Form -->
+                            <form id="registerForm" class="mb-4">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label fw-semibold">الاسم الكامل</label>
+                                        <div class="input-group-custom">
+                                            <i class="bi bi-person input-icon"></i>
+                                            <input type="text" class="form-control" id="fullName" placeholder="أدخل اسمك بالكامل" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label fw-semibold">رقم الهاتف</label>
+                                        <div class="input-group-custom">
+                                            <i class="bi bi-telephone input-icon"></i>
+                                            <input type="tel" class="form-control" id="phone" placeholder="01xxxxxxxxx" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">البريد الإلكتروني</label>
+                                    <div class="input-group-custom">
+                                        <i class="bi bi-envelope input-icon"></i>
+                                        <input type="email" class="form-control" id="email" placeholder="example@mail.com" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label fw-semibold">كلمة المرور</label>
+                                        <div class="input-group-custom">
+                                            <i class="bi bi-lock input-icon"></i>
+                                            <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                                            <button type="button" class="toggle-password" onclick="togglePassword('password', 'togglePassIcon')">
+                                                <i class="bi bi-eye" id="togglePassIcon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
+                                        <div class="input-group-custom">
+                                            <i class="bi bi-lock input-icon"></i>
+                                            <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••" required>
+                                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', 'toggleConfirmIcon')">
+                                                <i class="bi bi-eye" id="toggleConfirmIcon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Doctor-specific fields (hidden initially) -->
+                                <div id="doctorFields" style="display: none;">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">التخصص</label>
+                                        <select class="form-select" id="specialtyId">
+                                            <option value="">اختر التخصص</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">سنوات الخبرة</label>
+                                        <input type="number" class="form-control" id="yearsOfExperience" placeholder="عدد سنوات الخبرة" min="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">سعر الكشف (ج.م)</label>
+                                        <input type="number" class="form-control" id="price" placeholder="سعر الكشف" min="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">عنوان العيادة</label>
+                                        <textarea class="form-control" id="clinicAddress" rows="2" placeholder="عنوان العيادة"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">نبذة عن الطبيب</label>
+                                        <textarea class="form-control" id="bio" rows="3" placeholder="نبذة عن خبراتك ومؤهلاتك"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="terms-check mb-4">
+                                    <input type="checkbox" id="terms" required>
+                                    <label for="terms" class="text-muted small">
+                                        أوافق على <a href="#" class="text-primary text-decoration-none">الشروط والأحكام</a> 
+                                        و <a href="#" class="text-primary text-decoration-none">سياسة الخصوصية</a> الخاصة بمنصة صحتك.
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-register w-100 mb-3" id="registerBtn">
+                                    <span id="registerText">إنشاء حساب</span>
+                                    <span id="registerSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </form>
+
+                            <!-- Login Link -->
+                            <div class="text-center">
+                                <p class="text-muted mb-0">
+                                    هل لديك حساب بالفعل؟ 
+                                    <a href="login.html" class="text-primary text-decoration-none fw-bold">تسجيل الدخول من هنا</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        let selectedRole = 'patient';
+
+        async function loadSpecialtiesForRegister() {
+            try {
+                const specialties = await api.getSpecialties();
+                const select = document.getElementById('specialtyId');
+                if (select) {
+                    select.innerHTML = '<option value="">اختر التخصص</option>' + 
+                        specialties.map(s => `<option value="${s.id}">${s.name_ar}</option>`).join('');
+                }
+            } catch(e) { console.error('Failed to load specialties', e); }
+        }
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(role === 'patient' ? 'rolePatient' : 'roleDoctor').classList.add('active');
+            const doctorFields = document.getElementById('doctorFields');
+            if (role === 'doctor') {
+                doctorFields.style.display = 'block';
+                loadSpecialtiesForRegister();
+            } else {
+                doctorFields.style.display = 'none';
+            }
+        }
+
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        }
+
+        function isValidEgyptianPhone(phone) {
+            return /^01\d{9}$/.test(phone);
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            const registerText = document.getElementById('registerText');
+            const registerSpinner = document.getElementById('registerSpinner');
+
+            if (fullName.length < 3) {
+                alert('الاسم قصير جداً، يجب أن يكون 3 أحرف على الأقل');
+                return;
+            }
+            if (!isValidEgyptianPhone(phone)) {
+                alert('رقم هاتف مصري غير صالح (01xxxxxxxxx)');
+                return;
+            }
+            if (password.length < 8) {
+                alert('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert('كلمة المرور غير متطابقة');
+                return;
+            }
+
+            const userData = {
+                fullName: fullName,
+                phone: phone,
+                email: email,
+                password: password,
+                role: selectedRole
+            };
+
+            if (selectedRole === 'doctor') {
+                userData.specialtyId = document.getElementById('specialtyId').value || null;
+                userData.yearsOfExperience = parseInt(document.getElementById('yearsOfExperience').value) || 0;
+                userData.price = parseFloat(document.getElementById('price').value) || 0;
+                userData.clinicAddress = document.getElementById('clinicAddress').value.trim();
+                userData.bio = document.getElementById('bio').value.trim();
+            }
+
+            registerBtn.disabled = true;
+            registerText.textContent = 'جارٍ الإنشاء...';
+            registerSpinner.classList.remove('d-none');
+
+            try {
+                const result = await api.register(userData);
+                alert('تم إنشاء الحساب بنجاح! سيتم نقلك إلى لوحة التحكم.');
+                window.location.href = 'dashboard.html';
+            } catch (err) {
+                registerBtn.disabled = false;
+                registerText.textContent = 'إنشاء حساب';
+                registerSpinner.classList.add('d-none');
+                alert(err.message || 'فشل إنشاء الحساب');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('auth_token')) window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صحتك - منصتك الطبية المتكاملة</title>
+    <meta name="description" content="صحتك - أكبر شبكة طبية في مصر. احجز موعدك مع أفضل الأطباء واطلب أدويتك أونلاين.">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                    <i class="bi bi-activity"></i>
+                </div>
+                <span class="brand-text">صحتك<span class="brand-dot">.</span></span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="doctors.html">الأطباء</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pharmacies.html">الصيدليات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">المواعيد</a></li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-2" id="authButtons">
+                    <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-dots"></div>
+        
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="trust-badge">
+                        <i class="bi bi-shield-check"></i>
+                        <span>منصة رعاية صحية موثوقة في مصر</span>
+                    </div>
+                    
+                    <h1 class="hero-title">احجز أفضل الأطباء في مصر بسهولة</h1>
+                    <p class="hero-subtitle">ابحث حسب التخصص والمدينة، قارن التقييمات والأسعار، واحجز موعدك في دقائق.</p>
+                    
+                    <div class="search-card">
+                        <form id="heroSearchForm" class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label small text-muted">التخصص</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-heart-pulse text-muted"></i></span>
+                                    <select class="form-select border-start-0" id="specialtySelect"><option value="">اختر التخصص</option></select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small text-muted">المدينة</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+                                    <select class="form-select border-start-0" id="citySelect"><option value="">اختر المدينة</option></select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary w-100 py-2"><i class="bi bi-search me-2"></i> ابحث الآن</button>
+                            </div>
+                        </form>
+                        <div class="quick-pills mt-3 pt-3 border-top">
+                            <span class="text-muted small me-2">شائع:</span>
+                            <button class="btn btn-sm btn-light rounded-pill" onclick="quickSearch('1')">الأسنان</button>
+                            <button class="btn btn-sm btn-light rounded-pill" onclick="quickSearch('2')">الجلدية</button>
+                            <button class="btn btn-sm btn-light rounded-pill" onclick="quickSearch('3')">الأطفال</button>
+                            <button class="btn btn-sm btn-light rounded-pill" onclick="quickSearch('4')">القلب</button>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item"><div class="stat-icon"><i class="bi bi-clock"></i></div><div class="stat-text"><span class="stat-value">50K+</span><span class="stat-label">موعد شهريًا</span></div></div>
+                        <div class="stat-item"><div class="stat-icon"><i class="bi bi-heart-pulse"></i></div><div class="stat-text"><span class="stat-value">5K+</span><span class="stat-label">طبيب معتمد</span></div></div>
+                        <div class="stat-item"><div class="stat-icon"><i class="bi bi-people"></i></div><div class="stat-text"><span class="stat-value">1M+</span><span class="stat-label">مستخدم نشط</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SPECIALTIES GRID ==================== -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-end mb-4">
+                <div><div class="section-label"><i class="bi bi-layers"></i><span>تخصصات متنوعة</span></div><h2 class="section-title">اختر تخصصك بسرعة</h2></div>
+                <a href="doctors.html" class="btn btn-soft-primary btn-sm rounded-pill">كل التخصصات</a>
+            </div>
+            <div class="row g-3" id="specialtiesGrid"></div>
+        </div>
+    </section>
+
+    <!-- ==================== TOP DOCTORS ==================== -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-end mb-4">
+                <div><div class="section-label"><i class="bi bi-star-fill"></i><span>الأعلى خبرة</span></div><h2 class="section-title">أفضل الأطباء</h2></div>
+                <a href="doctors.html" class="btn btn-soft-primary btn-sm rounded-pill">عرض الكل</a>
+            </div>
+            <div class="row g-3" id="topDoctorsGrid"></div>
+        </div>
+    </section>
+
+    <!-- ==================== NEARBY PHARMACIES ==================== -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-end mb-4">
+                <div><div class="section-label"><i class="bi bi-geo-alt"></i><span>الصيدليات</span></div><h2 class="section-title">صيدليات قريبة منك</h2></div>
+                <a href="pharmacies.html" class="btn btn-soft-primary btn-sm rounded-pill">عرض الكل</a>
+            </div>
+            <div class="row g-3" id="pharmaciesGrid"></div>
+        </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5"><h2 class="section-title">كيف تعمل صحتك؟</h2><p class="text-muted">٣ خطوات بسيطة للحجز</p></div>
+            <div class="row g-4">
+                <div class="col-md-4"><div class="step-card text-center"><div class="step-icon"><i class="bi bi-search"></i></div><span class="step-number">١</span><h4>ابحث عن الطبيب</h4><p class="text-muted">استخدم الفلاتر حسب التخصص والمدينة والتقييم.</p></div></div>
+                <div class="col-md-4"><div class="step-card text-center"><div class="step-icon"><i class="bi bi-calendar-check"></i></div><span class="step-number">٢</span><h4>اختر الموعد</h4><p class="text-muted">شاهد المواعيد المتاحة واحجز في دقيقة.</p></div></div>
+                <div class="col-md-4"><div class="step-card text-center"><div class="step-icon"><i class="bi bi-heart-pulse"></i></div><span class="step-number">٣</span><h4>تابع صحتك</h4><p class="text-muted">إدارة مواعيدك وسجلك من لوحة تحكم واحدة.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA BANNER ==================== -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="cta-banner"><div class="cta-pattern"></div><div class="position-relative text-center"><div class="badge bg-white/10 backdrop-blur rounded-pill px-3 py-2 mb-3"><i class="bi bi-stars"></i><span>أكثر من مليون مستخدم</span></div><h2 class="cta-title">ابدأ رحلتك لحياة صحية أفضل</h2><p class="cta-subtitle">صحتك بين إيديك... احجز دكتورك دلوقتي! 💙</p><div class="d-flex flex-column flex-sm-row gap-2 justify-content-center"><a href="doctors.html" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">احجز موعدك الآن <i class="bi bi-arrow-left me-2"></i></a><a href="register.html" class="btn btn-outline-light btn-lg rounded-pill px-5">سجّل مجاناً</a></div></div></div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6"><div class="d-flex align-items-center gap-2 mb-3"><div class="logo-icon"><i class="bi bi-shield-check"></i><i class="bi bi-activity"></i></div><span class="brand-text text-white">صحتك<span class="brand-dot">.</span></span></div><p class="text-white-50 small">أكبر شبكة طبية في مصر 🇪🇬 بنسهّل عليك توصل لأحسن دكاترة 💙</p><div class="d-flex gap-2"><a href="#" class="social-icon"><i class="bi bi-facebook"></i></a><a href="#" class="social-icon"><i class="bi bi-twitter"></i></a><a href="#" class="social-icon"><i class="bi bi-instagram"></i></a><a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a></div></div>
+                <div class="col-lg-3 col-md-6"><h5 class="text-white mb-3">روابط سريعة</h5><ul class="list-unstyled footer-links"><li><a href="index.html">عن صحتك</a></li><li><a href="doctors.html">دوّر على دكتور</a></li><li><a href="pharmacies.html">الصيدلية أونلاين</a></li></ul></div>
+                <div class="col-lg-3 col-md-6"><h5 class="text-white mb-3">الدعم</h5><ul class="list-unstyled footer-links"><li><a href="#">الأسئلة الشائعة</a></li><li><a href="#">اتصل بينا</a></li><li><a href="#">شروط الاستخدام</a></li><li><a href="#">سياسة الخصوصية</a></li></ul></div>
+                <div class="col-lg-3 col-md-6"><h5 class="text-white mb-3">تواصل معانا</h5><ul class="list-unstyled footer-contact"><li><i class="bi bi-geo-alt"></i> القاهرة، مصر</li><li><i class="bi bi-telephone"></i> 19XXX</li><li><i class="bi bi-envelope"></i> support@sehatuk.com</li></ul></div>
+            </div>
+        </div>
+        <div class="footer-bottom"><div class="container py-3 d-flex flex-column flex-sm-row justify-content-between align-items-center"><span class="small text-white-50">© 2026 منصة صحتك الطبية.</span><span class="small text-white-50">صُنع بـ <i class="bi bi-heart-fill text-danger"></i> في مصر 🇪🇬</span></div></div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

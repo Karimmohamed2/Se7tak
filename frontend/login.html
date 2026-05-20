@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - صحتك</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+        }
+        .login-card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+        .login-hero {
+            background: linear-gradient(135deg, #1E88E5 0%, #2BB6E6 100%);
+            border-radius: 24px;
+            color: white;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-group-custom {
+            position: relative;
+        }
+        .input-group-custom .form-control {
+            padding-right: 3rem;
+            padding-left: 3rem;
+            height: 52px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .input-group-custom .form-control:focus {
+            border-color: #1E88E5;
+            box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.1);
+        }
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            z-index: 10;
+        }
+        .toggle-password {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            z-index: 10;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .btn-login {
+            height: 52px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #1E88E5, #2BB6E6);
+            border: none;
+            box-shadow: 0 4px 16px rgba(30, 136, 229, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(30, 136, 229, 0.4);
+        }
+        .social-btn {
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .social-btn:hover {
+            border-color: #1E88E5;
+            background: #f8fafc;
+        }
+        .divider-text {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+        .divider-text::before,
+        .divider-text::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page d-flex align-items-center py-5">
+        <div class="container">
+            <div class="row g-4 align-items-center justify-content-center">
+                <!-- Login Form -->
+                <div class="col-12 col-lg-5">
+                    <div class="card login-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <!-- Logo -->
+                            <div class="text-center mb-4">
+                                <a href="index.html" class="d-inline-flex align-items-center gap-2 text-decoration-none">
+                                    <div class="logo-icon" style="width: 48px; height: 48px;">
+                                        <i class="bi bi-shield-check"></i>
+                                        <i class="bi bi-activity"></i>
+                                    </div>
+                                    <span class="brand-text" style="font-size: 1.75rem;">صحتك<span class="brand-dot">.</span></span>
+                                </a>
+                            </div>
+
+                            <div class="text-center mb-4">
+                                <h2 class="fw-bold mb-2">تسجيل الدخول</h2>
+                                <p class="text-muted mb-0">مرحباً بك مجدداً في منصة صحتك الرقمية</p>
+                            </div>
+
+                            <!-- Login Form -->
+                            <form id="loginForm" class="mb-4">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">البريد الإلكتروني</label>
+                                    <div class="input-group-custom">
+                                        <i class="bi bi-envelope input-icon"></i>
+                                        <input type="email" class="form-control" id="email" placeholder="example@mail.com" required>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">كلمة المرور</label>
+                                    <div class="input-group-custom">
+                                        <i class="bi bi-lock input-icon"></i>
+                                        <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                                            <i class="bi bi-eye" id="toggleIcon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label text-muted small" for="rememberMe">تذكرني</label>
+                                    </div>
+                                    <a href="forgot-password.html" class="text-primary text-decoration-none small fw-medium">نسيت كلمة المرور؟</a>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-login w-100 mb-3" id="loginBtn">
+                                    <span id="loginText">تسجيل الدخول</span>
+                                    <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                </button>
+                            </form>
+
+                            <!-- Divider -->
+                            <div class="divider-text mb-4">أو سجل الدخول باستخدام</div>
+
+                            <!-- Social Login -->
+                            <div class="row g-2 mb-4">
+                                <div class="col-6">
+                                    <button class="social-btn w-100" onclick="socialLogin('google')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                                        Google
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="social-btn w-100" onclick="socialLogin('facebook')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                        Facebook
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Register Link -->
+                            <div class="text-center">
+                                <p class="text-muted mb-0">
+                                    ليس لديك حساب؟ 
+                                    <a href="register.html" class="text-primary text-decoration-none fw-bold">سجل الآن مجاناً</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Side -->
+                <div class="col-12 col-lg-5 d-none d-lg-block">
+                    <div class="login-hero p-5 h-100 d-flex flex-column justify-content-center">
+                        <div class="text-center mb-5">
+                            <div class="display-1 mb-4">🏥</div>
+                            <h3 class="fw-bold mb-3">رعايتكم هي أولويتنا</h3>
+                            <p class="opacity-75 mb-0">انضم إلى آلاف المستخدمين الذين يثقون في منصة صحتك لإدارة سجلاتهم الطبية ومواعيدهم بكل سهولة وأمان.</p>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
+                                    <div class="feature-icon"><i class="bi bi-shield-check fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">أمان تام</h6><p class="small opacity-75 mb-0">بياناتك محمية</p></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center gap-3 p-3 rounded-4" style="background: rgba(255,255,255,0.1);">
+                                    <div class="feature-icon"><i class="bi bi-headset fs-4"></i></div>
+                                    <div><h6 class="fw-bold mb-1">دعم 24/7</h6><p class="small opacity-75 mb-0">فريقنا متاح</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial -->
+                        <div class="mt-5 p-4 rounded-4" style="background: rgba(255,255,255,0.1);">
+                            <div class="d-flex gap-1 mb-3"><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i></div>
+                            <p class="mb-3 opacity-90">"أفضل تجربة رعاية صحية حصلت عليها، التنظيم والمتابعة في صحتك مذهلة."</p>
+                            <p class="small opacity-60 mb-0">— د. أحمد خالد، مستخدم للمنصة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        }
+
+        function socialLogin(provider) {
+            alert('تسجيل الدخول باستخدام ' + provider + ' (قريباً)');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+
+            loginBtn.disabled = true;
+            loginText.textContent = 'جارٍ الدخول...';
+            loginSpinner.classList.remove('d-none');
+
+            try {
+                const result = await api.login(email, password);
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect') || 'dashboard.html';
+                window.location.href = redirect;
+            } catch (err) {
+                loginBtn.disabled = false;
+                loginText.textContent = 'تسجيل الدخول';
+                loginSpinner.classList.add('d-none');
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show rounded-4';
+                alertDiv.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i> ${err.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة'}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+                const form = document.getElementById('loginForm');
+                form.parentNode.insertBefore(alertDiv, form);
+                setTimeout(() => alertDiv.remove(), 5000);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('auth_token')) window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

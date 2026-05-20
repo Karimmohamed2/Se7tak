@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الإدارة - صحتك</title>
+
+    <!-- Bootstrap RTL -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary: #1E88E5;
+            --primary-dark: #1565C0;
+            --primary-light: #E3F2FD;
+            --success: #2E7D32;
+            --success-light: #E8F5E9;
+            --warning: #F9A825;
+            --warning-light: #FFFDE7;
+            --danger: #C62828;
+            --danger-light: #FFEBEE;
+            --sidebar-width: 280px;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #E8EDF2;
+            --bg-light: #F5F7FA;
+            --text-dark: #1a1a2e;
+            --text-muted: #6B7280;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+            --card-shadow-hover: 0 4px 12px rgba(30,136,229,0.15), 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        * {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+        }
+
+        body {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--sidebar-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon i:first-child {
+            font-size: 1.5rem;
+            color: var(--primary);
+            opacity: 0.4;
+        }
+
+        .logo-icon i:last-child {
+            font-size: 1.1rem;
+            color: var(--primary);
+            position: absolute;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-dot {
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        .admin-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .nav-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--sidebar-border);
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .admin-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: var(--danger);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger-light);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-icon.blue { background: var(--primary-light); color: var(--primary); }
+        .stat-icon.green { background: var(--success-light); color: var(--success); }
+        .stat-icon.orange { background: var(--warning-light); color: var(--warning); }
+        .stat-icon.red { background: var(--danger-light); color: var(--danger); }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ===== CONTENT CARDS ===== */
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ===== TABLES ===== */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table th {
+            background: var(--bg-light);
+            padding: 1rem 1rem;
+            text-align: right;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--sidebar-border);
+            white-space: nowrap;
+        }
+
+        .custom-table td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--sidebar-border);
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        .custom-table tr:hover td {
+            background: var(--bg-light);
+        }
+
+        /* Status badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .status-confirmed {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .status-completed {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .status-cancelled {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            padding: 1rem 1.5rem;
+            background: white;
+            border-bottom: 1px solid var(--sidebar-border);
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--sidebar-border);
+            background: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ===== MOBILE ===== */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid var(--sidebar-border);
+            box-shadow: var(--card-shadow);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+        }
+
+        @media (max-width: 991px) {
+            .mobile-toggle {
+                display: flex;
+            }
+            .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-right: 0;
+                padding: 1rem;
+                padding-top: 4rem;
+            }
+            .overlay.show {
+                display: block;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+        
+        .btn-action {
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle" onclick="toggleSidebar()">
+        <i class="bi bi-list fs-4"></i>
+    </button>
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                    <i class="bi bi-activity"></i>
+                </div>
+                <div>
+                    <span class="logo-text">صحتك<span class="logo-dot">.</span></span>
+                    <div class="admin-label">لوحة الإدارة</div>
+                </div>
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a class="nav-link active" onclick="showSection('dashboard')">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>لوحة التحكم</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('pending-doctors')">
+                    <i class="bi bi-person-check-fill"></i>
+                    <span>اعتماد الأطباء</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('approved-doctors')">
+                    <i class="bi bi-people-fill"></i>
+                    <span>الأطباء المعتمدين</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('users')">
+                    <i class="bi bi-person-lines-fill"></i>
+                    <span>المستخدمون</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('appointments')">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>جميع المواعيد</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('pharmacies')">
+                    <i class="bi bi-shop"></i>
+                    <span>الصيدليات</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" onclick="showSection('medicines')">
+                    <i class="bi bi-capsule"></i>
+                    <span>الأدوية</span>
+                </a>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar" id="adminAvatar">م</div>
+                <div class="admin-info">
+                    <div class="admin-name" id="adminName">مدير النظام</div>
+                    <div class="admin-role">Admin</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>تسجيل الخروج</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <div id="section-dashboard" class="section-content active">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 fw-bold">لوحة التحكم</h1>
+                    <p class="text-muted">نظرة عامة على المنصة</p>
+                </div>
+                <div class="text-muted">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+            <div class="stats-grid" id="statsGrid">
+                <!-- سيتم تعبئتها بالـ JS -->
+            </div>
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <div>
+                        <h3 class="card-title">أحدث المواعيد</h3>
+                        <div class="card-subtitle">آخر 5 مواعيد مسجلة</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>الطبيب</th>
+                                <th>المريض</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentAppointmentsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Doctors Section -->
+        <div id="section-pending-doctors" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">الأطباء بانتظار الاعتماد</h3>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>الطبيب</th>
+                                <th>التخصص</th>
+                                <th>السعر</th>
+                                <th>الخبرة</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingDoctorsTable">
+                            <tr><td colspan="6" class="text-center">جارٍ التحميل...</td><th}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Doctors Section -->
+        <div id="section-approved-doctors" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">الأطباء المعتمدين</h3>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>الطبيب</th>
+                                <th>التخصص</th>
+                                <th>السعر</th>
+                                <th>الخبرة</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="approvedDoctorsTable">
+                            <tr><td colspan="6" class="text-center">جارٍ التحميل...</td><th}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="section-users" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">المستخدمون</h3>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الهاتف</th>
+                                <th>الدور</th>
+                                <th>الحالة</th>
+                                <th>تاريخ التسجيل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr><td colspan="7" class="text-center">جارٍ التحميل...</td><th}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section (Full List) -->
+        <div id="section-appointments" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <div>
+                        <h3 class="card-title">جميع المواعيد</h3>
+                        <div class="card-subtitle">إدارة ومتابعة المواعيد</div>
+                    </div>
+                </div>
+                <div class="filter-bar" id="appointmentFilterBar">
+                    <button class="filter-btn active" data-filter="all">الكل</button>
+                    <button class="filter-btn" data-filter="pending">معلقة</button>
+                    <button class="filter-btn" data-filter="confirmed">مؤكدة</button>
+                    <button class="filter-btn" data-filter="completed">مكتملة</button>
+                    <button class="filter-btn" data-filter="cancelled">ملغية</button>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>الطبيب</th>
+                                <th>المريض</th>
+                                <th>التخصص</th>
+                                <th>التاريخ والوقت</th>
+                                <th>السعر</th>
+                                <th>الحالة</th>
+                                <th>ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allAppointmentsTable">
+                            <tr><td colspan="7" class="text-center">جارٍ التحميل...</td><th}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pharmacies Section (placeholder) -->
+        <div id="section-pharmacies" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">الصيدليات</h3>
+                </div>
+                <div class="p-4 text-center text-muted">قريباً</div>
+            </div>
+        </div>
+
+        <!-- Medicines Section (placeholder) -->
+        <div id="section-medicines" class="section-content">
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title">الأدوية</h3>
+                </div>
+                <div class="p-4 text-center text-muted">قريباً</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // ===== Admin Dashboard Logic =====
+        let currentUser = null;
+        let allAppointments = [];
+        let currentAppointmentFilter = 'all';
+
+        // Helper functions
+        function getStatusText(status) {
+            const map = { pending: 'معلق', confirmed: 'مؤكد', completed: 'مكتمل', cancelled: 'ملغي' };
+            return map[status] || status;
+        }
+
+        function formatPrice(price) {
+            if (!price && price !== 0) return '—';
+            return Number(price).toLocaleString('ar-EG') + ' ج.م';
+        }
+
+        function showToast(message, type = 'success') {
+            // Simple alert for now
+            alert(message);
+        }
+
+        // Auth check
+        async function requireAdmin() {
+            const token = localStorage.getItem('auth_token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            try {
+                const user = await api.getCurrentUser();
+                if (!user || user.role !== 'admin') {
+                    window.location.href = 'index.html';
+                    return false;
+                }
+                currentUser = user;
+                document.getElementById('adminName').textContent = user.fullName || 'مدير النظام';
+                document.getElementById('adminAvatar').textContent = (user.fullName || 'م').charAt(0);
+                return true;
+            } catch (err) {
+                window.location.href = 'login.html';
+                return false;
+            }
+        }
+
+        // Dashboard Stats
+        async function loadDashboardStats() {
+            try {
+                const stats = await api.getAdminStats();
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="bi bi-person-check"></i></div>
+                        <div class="stat-value">${stats.approvedDoctors || 0}</div>
+                        <div class="stat-label">أطباء معتمدون</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="bi bi-clock-history"></i></div>
+                        <div class="stat-value">${stats.pendingDoctors || 0}</div>
+                        <div class="stat-label">بانتظار الاعتماد</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="bi bi-people"></i></div>
+                        <div class="stat-value">${stats.totalPatients || 0}</div>
+                        <div class="stat-label">مرضى</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="bi bi-calendar-check"></i></div>
+                        <div class="stat-value">${stats.totalAppointments || 0}</div>
+                        <div class="stat-label">مواعيد</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="bi bi-shop"></i></div>
+                        <div class="stat-value">${stats.totalPharmacies || 0}</div>
+                        <div class="stat-label">صيدليات</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="bi bi-cash-stack"></i></div>
+                        <div class="stat-value">${(stats.totalRevenue || 0).toLocaleString('ar-EG')} ج.م</div>
+                        <div class="stat-label">إيرادات</div>
+                    </div>
+                `;
+
+                // Recent appointments
+                const appointments = await api.getAllAppointments();
+                const recent = appointments.slice(0, 5);
+                const tbody = document.getElementById('recentAppointmentsTable');
+                if (recent.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">لا توجد مواعيد</td></tr>';
+                } else {
+                    tbody.innerHTML = recent.map(apt => `
+                        <tr>
+                            <td>${apt.doctorName || '—'}</td>
+                            <td>${apt.patientName || '—'}</td>
+                            <td>${new Date(apt.startTime).toLocaleDateString('ar-EG')}</td>
+                            <td><span class="status-badge status-${apt.status}">${getStatusText(apt.status)}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Failed to load dashboard stats:', err);
+            }
+        }
+
+        // Pending Doctors
+        async function loadPendingDoctors() {
+            try {
+                const doctors = await api.getPendingDoctors();
+                const tbody = document.getElementById('pendingDoctorsTable');
+                if (doctors.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">لا توجد طلبات معلقة</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = doctors.map(doc => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="user-avatar-sm bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                    ${(doc.fullName || 'د').charAt(0)}
+                                </div>
+                                <span class="fw-semibold">${doc.fullName}</span>
+                            </div>
+                        </td>
+                        <td>${doc.specialtyName || '—'}</td>
+                        <td>${formatPrice(doc.price)}</td>
+                        <td>${doc.yearsOfExperience || 0} سنة</td>
+                        <td>${formatDate(doc.createdAt)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-success rounded-pill me-1" onclick="approveDoctor('${doc.id}')">
+                                <i class="bi bi-check-lg"></i> اعتماد
+                            </button>
+                            <button class="btn btn-sm btn-danger rounded-pill" onclick="rejectDoctor('${doc.id}')">
+                                <i class="bi bi-x-lg"></i> رفض
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load pending doctors:', err);
+            }
+        }
+
+        // Approved Doctors
+        async function loadApprovedDoctors() {
+            try {
+                const doctors = await api.getApprovedDoctors();
+                const tbody = document.getElementById('approvedDoctorsTable');
+                if (doctors.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">لا يوجد أطباء معتمدون</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = doctors.map(doc => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="user-avatar-sm bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                                    ${(doc.fullName || 'د').charAt(0)}
+                                </div>
+                                <span class="fw-semibold">${doc.fullName}</span>
+                            </div>
+                        </td>
+                        <td>${doc.specialtyName || '—'}</td>
+                        <td>${formatPrice(doc.price)}</td>
+                        <td>${doc.yearsOfExperience || 0} سنة</td>
+                        <td><span class="status-badge status-confirmed">معتمد</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="revokeDoctor('${doc.id}')">
+                                <i class="bi bi-x-circle"></i> إلغاء الاعتماد
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load approved doctors:', err);
+            }
+        }
+
+        // Users
+        async function loadUsers() {
+            try {
+                const users = await api.getAllUsers();
+                const tbody = document.getElementById('usersTable');
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">لا يوجد مستخدمون</td></tr>';
+                    return;
+                }
+                const roleLabels = {
+                    patient: { text: 'مريض', class: 'bg-info bg-opacity-10 text-info' },
+                    doctor: { text: 'طبيب', class: 'bg-primary bg-opacity-10 text-primary' },
+                    admin: { text: 'مدير', class: 'bg-danger bg-opacity-10 text-danger' }
+                };
+                tbody.innerHTML = users.map(user => {
+                    const role = roleLabels[user.role] || { text: user.role, class: 'bg-secondary bg-opacity-10 text-secondary' };
+                    return `
+                        <tr>
+                            <td>${user.fullName || '—'}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone || '—'}</td>
+                            <td><span class="badge ${role.class} rounded-pill">${role.text}</span></td>
+                            <td>
+                                ${user.isActive 
+                                    ? '<span class="badge bg-success bg-opacity-10 text-success rounded-pill">مفعل</span>'
+                                    : '<span class="badge bg-danger bg-opacity-10 text-danger rounded-pill">معطل</span>'
+                                }
+                            </td>
+                            <td>${formatDate(user.createdAt)}</td>
+                            <td>
+                                <button class="btn btn-sm ${user.isActive ? 'btn-outline-danger' : 'btn-outline-success'} rounded-pill" onclick="toggleUserStatus('${user.id}')">
+                                    ${user.isActive ? '<i class="bi bi-x-circle"></i> تعطيل' : '<i class="bi bi-check-circle"></i> تفعيل'}
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Failed to load users:', err);
+            }
+        }
+
+        // All Appointments
+        async function loadAllAppointments() {
+            try {
+                allAppointments = await api.getAllAppointments();
+                renderAppointmentsTable();
+            } catch (err) {
+                document.getElementById('allAppointmentsTable').innerHTML = '<tr><td colspan="7" class="text-center text-danger">فشل تحميل المواعيد</td></tr>';
+            }
+        }
+
+        function renderAppointmentsTable() {
+            let filtered = allAppointments;
+            if (currentAppointmentFilter !== 'all') {
+                filtered = allAppointments.filter(a => a.status === currentAppointmentFilter);
+            }
+            const tbody = document.getElementById('allAppointmentsTable');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">لا توجد مواعيد</td></tr>';
+                return;
+            }
+            tbody.innerHTML = filtered.map(apt => `
+                <tr>
+                    <td>${apt.doctorName || '—'}</td>
+                    <td>${apt.patientName || '—'}</td>
+                    <td>${apt.specialty || '—'}</td>
+                    <td>${new Date(apt.startTime).toLocaleString('ar-EG')}</td>
+                    <td>${formatPrice(apt.price)}</td>
+                    <td><span class="status-badge status-${apt.status}">${getStatusText(apt.status)}</span></td>
+                    <td>${apt.notes || ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Actions
+        async function approveDoctor(id) {
+            if (!confirm('هل أنت متأكد من اعتماد هذا الطبيب؟')) return;
+            try {
+                await api.approveDoctor(id);
+                showToast('تم اعتماد الطبيب بنجاح');
+                loadPendingDoctors();
+                loadApprovedDoctors();
+                loadDashboardStats();
+            } catch (err) {
+                showToast(err.message || 'فشل الاعتماد', 'error');
+            }
+        }
+
+        async function rejectDoctor(id) {
+            if (!confirm('هل أنت متأكد من رفض هذا الطبيب؟')) return;
+            try {
+                await api.rejectDoctor(id);
+                showToast('تم رفض الطبيب');
+                loadPendingDoctors();
+                loadDashboardStats();
+            } catch (err) {
+                showToast(err.message || 'فشل الرفض', 'error');
+            }
+        }
+
+        async function revokeDoctor(id) {
+            if (!confirm('هل أنت متأكد من إلغاء اعتماد هذا الطبيب؟')) return;
+            try {
+                await api.revokeDoctor(id);
+                showToast('تم إلغاء الاعتماد');
+                loadApprovedDoctors();
+                loadPendingDoctors();
+                loadDashboardStats();
+            } catch (err) {
+                showToast(err.message || 'فشل إلغاء الاعتماد', 'error');
+            }
+        }
+
+        async function toggleUserStatus(id) {
+            if (!confirm('هل أنت متأكد من تغيير حالة هذا المستخدم؟')) return;
+            try {
+                await api.toggleUserActive(id);
+                showToast('تم تغيير حالة المستخدم');
+                loadUsers();
+                loadDashboardStats();
+            } catch (err) {
+                showToast(err.message || 'فشل تغيير الحالة', 'error');
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '—';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section-${sectionName}`).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            if (event?.target) event.target.classList.add('active');
+            if (window.innerWidth < 992) toggleSidebar();
+            
+            // Load section data
+            switch(sectionName) {
+                case 'dashboard': loadDashboardStats(); break;
+                case 'pending-doctors': loadPendingDoctors(); break;
+                case 'approved-doctors': loadApprovedDoctors(); break;
+                case 'users': loadUsers(); break;
+                case 'appointments': loadAllAppointments(); break;
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.overlay').classList.toggle('show');
+        }
+
+        function logout() {
+            api.logout();
+        }
+
+        // Set current date
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ar-EG', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Initialize filter buttons
+        function initFilters() {
+            document.querySelectorAll('#appointmentFilterBar .filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#appointmentFilterBar .filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentAppointmentFilter = btn.dataset.filter;
+                    renderAppointmentsTable();
+                });
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (await requireAdmin()) {
+                loadDashboardStats();
+                initFilters();
+            }
+        });
+    </script>
+</body>
+</html>

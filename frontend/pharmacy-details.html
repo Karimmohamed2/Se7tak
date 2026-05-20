@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الصيدلية - صحتك</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        .phone-rtl {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+        }
+        .pharmacy-hero {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        .pharmacy-avatar-lg {
+            width: 80px;
+            height: 80px;
+            border-radius: 1.25rem;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .badge-24h {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.35rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+        .badge-closed {
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+            padding: 0.35rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        #pharmacyMap {
+            height: 300px;
+            border-radius: 1rem;
+            z-index: 1;
+        }
+        .medicine-item {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .medicine-item:hover {
+            border-color: #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .medicine-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1E88E5, #2BB6E6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .review-item {
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .review-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1E88E5, #2BB6E6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .info-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(30, 136, 229, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1E88E5;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .btn-action {
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-phone {
+            background: #10b981;
+            color: white;
+            border: none;
+        }
+        .btn-phone:hover {
+            background: #059669;
+            color: white;
+        }
+        .btn-directions {
+            background: #f8fafc;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-directions:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        @media (max-width: 768px) {
+            .pharmacy-hero {
+                padding: 1.5rem;
+            }
+            .pharmacy-avatar-lg {
+                width: 64px;
+                height: 64px;
+                font-size: 2rem;
+            }
+            #pharmacyMap {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <div class="logo-icon"><i class="bi bi-shield-check"></i><i class="bi bi-activity"></i></div>
+                <span class="brand-text">صحتك<span class="brand-dot">.</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="doctors.html">الأطباء</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="pharmacies.html">الصيدليات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">المواعيد</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="authButtons">
+                    <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== BREADCRUMB ==================== -->
+    <div class="bg-white border-bottom py-3">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-muted">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="pharmacies.html" class="text-decoration-none text-muted">الصيدليات</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" id="pharmacyNameBreadcrumb">...</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ==================== PHARMACY HERO ==================== -->
+    <section class="pt-4">
+        <div class="container">
+            <div class="pharmacy-hero">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="pharmacy-avatar-lg">💊</div>
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                    <h1 class="h3 fw-bold mb-0" id="pharmacyName">جارٍ التحميل...</h1>
+                                    <span id="statusBadge">...</span>
+                                </div>
+                                <p class="mb-2 opacity-75" id="pharmacyAddress">...</p>
+                                <div class="d-flex align-items-center gap-2" id="pharmacyRating">
+                                    <span class="spinner-border spinner-border-sm text-white"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <div class="d-flex gap-2 justify-content-md-end">
+                            <a href="#" class="btn btn-light btn-action" id="phoneBtn">
+                                <i class="bi bi-telephone"></i>
+                                <span class="phone-rtl" id="phoneText">...</span>
+                            </a>
+                            <button class="btn btn-light btn-action" onclick="getDirections()">
+                                <i class="bi bi-geo-alt"></i>
+                                الاتجاهات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PHARMACY CONTENT ==================== -->
+    <section class="pb-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Main Content -->
+                <div class="col-lg-8">
+                    <!-- About & Info -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold mb-3">عن الصيدلية</h4>
+                            <p class="text-muted" id="pharmacyDescription">جارٍ التحميل...</p>
+                            <div class="row g-3 mt-2">
+                                <div class="col-sm-6">
+                                    <div class="info-card mb-0">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="info-icon"><i class="bi bi-clock"></i></div>
+                                            <div><div class="text-muted small">ساعات العمل</div><div class="fw-semibold" id="workingHours">...</div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-card mb-0">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="info-icon"><i class="bi bi-telephone"></i></div>
+                                            <div><div class="text-muted small">رقم الهاتف</div><div class="fw-semibold phone-rtl" id="phoneDisplay">...</div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2"><i class="bi bi-geo-alt text-primary"></i> الموقع على الخريطة</h4>
+                            <div id="pharmacyMap"></div>
+                        </div>
+                    </div>
+
+                    <!-- Medicines Available -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="bi bi-capsule text-primary"></i> الأدوية المتاحة</h4>
+                                <span class="badge bg-primary" id="medicinesCount">0</span>
+                            </div>
+                            <div id="medicinesList"><div class="text-center py-4"><div class="spinner-border text-primary"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="fw-bold mb-0">تقييمات المرضى</h4>
+                                <div class="d-flex align-items-center gap-2"><span class="rating-stars" id="headerStars"></span><span class="fw-bold" id="headerRating">0.0</span><span class="text-muted small">(<span id="headerReviewCount">0</span> تقييم)</span></div>
+                            </div>
+                            <div id="reviewsList"><div class="text-center py-4"><div class="spinner-border text-primary"></div></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm mb-4 sticky-top" style="top: 90px;">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">معلومات سريعة</h5>
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-shop"></i></div><div><div class="text-muted small">الاسم</div><div class="fw-semibold" id="sidebarName">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-geo-alt"></i></div><div><div class="text-muted small">المدينة</div><div class="fw-semibold" id="sidebarCity">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom"><div class="info-icon"><i class="bi bi-clock"></i></div><div><div class="text-muted small">الحالة</div><div class="fw-semibold" id="sidebarStatus">...</div></div></div>
+                            <div class="d-flex align-items-center gap-3"><div class="info-icon"><i class="bi bi-star"></i></div><div><div class="text-muted small">التقييم</div><div class="fw-semibold" id="sidebarRating">...</div></div></div>
+                            <hr class="my-4">
+                            <a href="#" class="btn btn-primary w-100 py-2 rounded-pill fw-semibold" id="sidebarPhoneBtn"><i class="bi bi-telephone me-2"></i> اتصل الآن</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4"><div class="d-flex align-items-center gap-2 mb-3"><div class="logo-icon bg-white bg-opacity-10"><i class="bi bi-shield-check text-white"></i><i class="bi bi-activity text-white"></i></div><span class="brand-text text-white">صحتك<span class="brand-dot">.</span></span></div><p class="text-white-50 small">أكبر شبكة طبية في مصر 🇪🇬 بنسهّل عليك توصل لأحسن دكاترة 💙</p></div>
+                <div class="col-md-2"><h6 class="fw-bold mb-3">روابط سريعة</h6><ul class="list-unstyled small"><li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">الرئيسية</a></li><li class="mb-2"><a href="doctors.html" class="text-white-50 text-decoration-none">الأطباء</a></li><li class="mb-2"><a href="pharmacies.html" class="text-white-50 text-decoration-none">الصيدليات</a></li></ul></div>
+                <div class="col-md-2"><h6 class="fw-bold mb-3">الدعم</h6><ul class="list-unstyled small"><li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">الأسئلة الشائعة</a></li><li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">اتصل بينا</a></li></ul></div>
+                <div class="col-md-4"><h6 class="fw-bold mb-3">تواصل معانا</h6><ul class="list-unstyled small text-white-50"><li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-geo-alt"></i> القاهرة، مصر</li><li class="mb-2 d-flex align-items-center gap-2"><i class="bi bi-telephone"></i> <span class="phone-rtl">19XXX</span></li></ul></div>
+            </div>
+            <hr class="border-white border-opacity-10 my-4">
+            <div class="text-center small text-white-50">© 2026 منصة صحتك الطبية. صُنع بـ ❤️ في مصر 🇪🇬</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/api.js"></script>
+    <script src="js/pharmacy-details.js"></script>
+</body>
+</html>

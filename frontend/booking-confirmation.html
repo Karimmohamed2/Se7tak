@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم تأكيد الحجز - صحتك</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* Success Animation */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-checkmark i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #1E88E5;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .appointment-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            border-color: #1E88E5;
+            box-shadow: 0 4px 20px rgba(30, 136, 229, 0.1);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(30, 136, 229, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1E88E5;
+            font-size: 1.25rem;
+        }
+
+        .btn-action {
+            padding: 0.875rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti Container -->
+    <div class="confetti" id="confettiContainer"></div>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                    <i class="bi bi-activity"></i>
+                </div>
+                <span class="brand-text">صحتك<span class="brand-dot">.</span></span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="doctors.html">الأطباء</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pharmacies.html">الصيدليات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">المواعيد</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2" id="authButtons">
+                    <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== CONFIRMATION SECTION ==================== -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Success Message -->
+                    <div class="text-center mb-5" id="confirmationContainer">
+                        <div class="success-checkmark">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+
+                        <h1 class="fw-bold mb-3">تم تأكيد حجزك بنجاح! 🎉</h1>
+                        <p class="text-muted mb-4">
+                            رقم الحجز <span class="fw-bold bg-light px-2 py-1 rounded" id="appointmentNumber">#--------</span>
+                        </p>
+
+                        <!-- Status Badge -->
+                        <span class="badge bg-success px-3 py-2 fs-6" id="statusBadge">
+                            <i class="bi bi-check-circle me-1"></i> مؤكد
+                        </span>
+                    </div>
+
+                    <!-- Appointment Details Card -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4 p-lg-5">
+                            <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                <i class="bi bi-calendar-check text-primary"></i>
+                                ملخص الموعد
+                            </h4>
+
+                            <!-- Doctor Info -->
+                            <div class="appointment-card p-4 mb-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="flex-grow-1">
+                                        <h5 class="fw-bold mb-1" id="doctorName">...</h5>
+                                        <p class="text-primary fw-semibold small mb-0" id="doctorSpecialty">...</p>
+                                    </div>
+                                    <span class="badge bg-success" id="statusBadge2">مؤكد</span>
+                                </div>
+                            </div>
+
+                            <!-- Details Grid -->
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="detail-row">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-calendar"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">التاريخ</div>
+                                            <div class="fw-semibold" id="confirmDate">...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="detail-row">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-clock"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">الوقت</div>
+                                            <div class="fw-semibold" id="confirmTime">...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="detail-row">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-cash-stack"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">المبلغ المدفوع</div>
+                                            <div class="fw-semibold text-primary" id="confirmPrice">...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="detail-row">
+                                        <div class="detail-icon">
+                                            <i class="bi bi-geo-alt"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-muted small">الموقع</div>
+                                            <div class="fw-semibold small" id="confirmLocation">...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info Alert -->
+                    <div class="alert alert-info border-0 rounded-4 d-flex align-items-center gap-3">
+                        <i class="bi bi-info-circle-fill fs-4"></i>
+                        <div>
+                            <div class="fw-semibold">تذكير مهم</div>
+                            <div class="small">سيتم إرسال تفاصيل الموعد على بريدك الإلكتروني. يرجى الوصول قبل الموعد بـ ١٥ دقيقة.</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row g-3 mt-2">
+                        <div class="col-sm-6">
+                            <a href="dashboard.html" class="btn btn-primary w-100 btn-action d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-calendar"></i>
+                                مواعيدي
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="index.html" class="btn btn-outline-primary w-100 btn-action d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-house"></i>
+                                الرئيسية
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Share Section -->
+                    <div class="text-center mt-5">
+                        <p class="text-muted mb-3">شارك الحجز مع من تهتم بهم</p>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-light rounded-circle" style="width: 44px; height: 44px;" onclick="shareBooking('whatsapp')">
+                                <i class="bi bi-whatsapp text-success"></i>
+                            </button>
+                            <button class="btn btn-light rounded-circle" style="width: 44px; height: 44px;" onclick="shareBooking('telegram')">
+                                <i class="bi bi-telegram text-info"></i>
+                            </button>
+                            <button class="btn btn-light rounded-circle" style="width: 44px; height: 44px;" onclick="shareBooking('copy')">
+                                <i class="bi bi-link-45deg text-primary"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="logo-icon bg-white bg-opacity-20">
+                            <i class="bi bi-shield-check text-white"></i>
+                        </div>
+                        <span class="brand-text text-white">صحتك<span class="opacity-50">.</span></span>
+                    </div>
+                    <p class="text-white-50 small">أكبر شبكة طبية في مصر 🇪🇬 بنسهّل عليك توصل لأحسن دكاترة 💙</p>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">روابط سريعة</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white-50 text-decoration-none small">الرئيسية</a></li>
+                        <li><a href="doctors.html" class="text-white-50 text-decoration-none small">الأطباء</a></li>
+                        <li><a href="pharmacies.html" class="text-white-50 text-decoration-none small">الصيدليات</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3">الدعم</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none small">الأسئلة الشائعة</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small">اتصل بنا</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none small">شروط الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="fw-bold mb-3">تواصل معنا</h6>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-geo-alt me-2"></i>القاهرة، مصر</p>
+                    <p class="text-white-50 small mb-1"><i class="bi bi-telephone me-2"></i>19XXX</p>
+                    <p class="text-white-50 small"><i class="bi bi-envelope me-2"></i>support@sehatuk.com</p>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                © 2026 منصة صحتك الطبية. صُنع بـ <i class="bi bi-heart-fill text-danger"></i> في مصر 🇪🇬
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/booking.js"></script>
+
+    <script>
+        // Confetti Animation
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#1E88E5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = Math.random() * 2 + 's';
+                piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                container.appendChild(piece);
+            }
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Share functionality
+        function shareBooking(platform) {
+            const appointmentId = new URLSearchParams(window.location.search).get('id');
+            const text = `حجزت موعد في صحتك! رقم الحجز: #${appointmentId?.slice(0, 8).toUpperCase()}`;
+            const url = window.location.href;
+
+            switch(platform) {
+                case 'whatsapp':
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+                    break;
+                case 'telegram':
+                    window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+                    break;
+                case 'copy':
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('تم نسخ الرابط!');
+                    });
+                    break;
+            }
+        }
+
+        // Trigger confetti on load
+        document.addEventListener('DOMContentLoaded', createConfetti);
+    </script>
+</body>
+</html>

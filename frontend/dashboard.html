@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - صحتك</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <style>
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.35rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-pending { background: #FEF3C7; color: #D97706; }
+        .status-confirmed { background: #E0F2FE; color: #0284C7; }
+        .status-completed { background: #D1FAE5; color: #059669; }
+        .status-cancelled { background: #FEE2E2; color: #DC2626; }
+        
+        .appointment-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s;
+        }
+        .appointment-card:hover {
+            border-color: #1E88E5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #94A3B8;
+        }
+        .doctor-section {
+            background: #F8FAFC;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .rating-stars i {
+            font-size: 0.85rem;
+        }
+        .star-rating i {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star-rating i:hover {
+            color: #f59e0b !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                    <i class="bi bi-activity"></i>
+                </div>
+                <span class="brand-text">صحتك<span class="brand-dot">.</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="doctors.html">الأطباء</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pharmacies.html">الصيدليات</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="dashboard.html">المواعيد</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="authButtons">
+                    <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">تسجيل الدخول</a>
+                    <a href="register.html" class="btn btn-primary rounded-pill px-4">إنشاء حساب</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">جارٍ التحميل...</span>
+        </div>
+        <p class="text-muted mt-2">جارٍ تحميل بياناتك...</p>
+    </div>
+
+    <!-- Dashboard Content (hidden initially) -->
+    <div id="dashboardContent" class="container py-4 d-none">
+        <!-- Welcome Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col">
+                <h1 class="h2 fw-bold mb-1">مرحباً، <span id="userName">...</span> 👋</h1>
+                <p class="text-muted" id="userSubtitle">مرحباً بعودتك! إليك ملخص مواعيدك.</p>
+            </div>
+            <div class="col-auto">
+                <a href="doctors.html" class="btn btn-primary rounded-pill px-4" id="bookBtn">
+                    <i class="bi bi-plus-circle me-1"></i> احجز موعداً جديداً
+                </a>
+            </div>
+        </div>
+
+        <!-- Alert for Doctor View -->
+        <div class="alert alert-info rounded-4 d-none" id="doctorAlert">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            مرحباً دكتور! يمكنك إدارة مواعيد المرضى وإضافة مواعيدك المتاحة من هذه الصفحة.
+        </div>
+
+        <!-- Alert for Admin Redirect -->
+        <div class="alert alert-warning rounded-4 d-none" id="adminRedirectMessage">
+            <i class="bi bi-shield-check me-2"></i>
+            مرحباً مدير النظام! انتقل إلى <a href="admin-dashboard.html" class="alert-link">لوحة الإدارة</a> لإدارة المنصة.
+        </div>
+
+        <!-- ========== PATIENT SECTIONS ========== -->
+        <!-- Stats Cards -->
+        <div id="patientStatsSection" class="row g-3 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="card border-0 shadow-sm text-center p-3">
+                    <i class="bi bi-calendar-check fs-2 text-primary mb-2"></i>
+                    <div class="fw-bold fs-3" id="statTotal">0</div>
+                    <div class="text-muted small">إجمالي المواعيد</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card border-0 shadow-sm text-center p-3">
+                    <i class="bi bi-check-circle fs-2 text-success mb-2"></i>
+                    <div class="fw-bold fs-3" id="statCompleted">0</div>
+                    <div class="text-muted small">مكتملة</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card border-0 shadow-sm text-center p-3">
+                    <i class="bi bi-clock-history fs-2 text-warning mb-2"></i>
+                    <div class="fw-bold fs-3" id="statUpcoming">0</div>
+                    <div class="text-muted small">قادمة</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="card border-0 shadow-sm text-center p-3">
+                    <i class="bi bi-cash-stack fs-2 text-info mb-2"></i>
+                    <div class="fw-bold fs-3" id="statSpent">0 ج.م</div>
+                    <div class="text-muted small">إجمالي المصروف</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient: Upcoming Appointments -->
+        <div id="patientUpcomingSection" class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold"><i class="bi bi-calendar-week me-2"></i>المواعيد القادمة</h5>
+            </div>
+            <div id="upcomingList"></div>
+        </div>
+
+        <!-- Patient: Past Appointments Table -->
+        <div id="patientPastSection">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold"><i class="bi bi-archive me-2"></i>المواعيد السابقة</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr><th>الطبيب</th><th>التخصص</th><th>التاريخ</th><th>الحالة</th><th>السعر</th><th></th></tr>
+                    </thead>
+                    <tbody id="pastAppointmentsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Patient: Activity Timeline -->
+        <div id="patientActivitySection" class="mt-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-activity me-2"></i>آخر النشاطات</h5>
+                    <div id="activityList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== DOCTOR SECTIONS ========== -->
+        <div id="doctorAppointmentsSection" class="d-none">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold py-3">
+                    <i class="bi bi-chat-dots me-2"></i>طلبات المواعيد
+                </div>
+                <div class="card-body" id="doctorAppointmentsList">
+                    <!-- سيتم تعبئتها بواسطة JS -->
+                </div>
+            </div>
+        </div>
+
+        <div id="doctorSlotsSection" class="d-none">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-bold py-3">
+                    <i class="bi bi-clock-history me-2"></i>إدارة المواعيد المتاحة
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label small">التاريخ</label>
+                            <input type="date" id="slotDate" class="form-control rounded-pill">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">الوقت</label>
+                            <input type="time" id="slotTime" class="form-control rounded-pill">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary rounded-pill w-100" id="addSlotBtn">
+                                <i class="bi bi-plus-circle me-1"></i> إضافة موعد
+                            </button>
+                        </div>
+                    </div>
+                    <h6 class="fw-bold mt-3">المواعيد المتاحة حالياً</h6>
+                    <div id="doctorSlotsList" class="border rounded-3 p-3 bg-light">
+                        <!-- سيتم تعبئتها -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">تقييم الطبيب <span id="reviewDoctorName"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <div class="text-center mb-3">
+                        <div class="star-rating d-flex justify-content-center gap-2">
+                            <i class="bi bi-star fs-3" data-rating="1"></i>
+                            <i class="bi bi-star fs-3" data-rating="2"></i>
+                            <i class="bi bi-star fs-3" data-rating="3"></i>
+                            <i class="bi bi-star fs-3" data-rating="4"></i>
+                            <i class="bi bi-star fs-3" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" value="5">
+                        <div class="small text-muted mt-1" id="ratingText">ممتاز</div>
+                    </div>
+                    <textarea class="form-control rounded-4" id="reviewComment" rows="3" placeholder="شاركنا تجربتك مع الطبيب..."></textarea>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary rounded-pill" onclick="submitReview()">إرسال التقييم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Additional initialization for star rating clicks
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star-rating i');
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    document.getElementById('reviewRating').value = rating;
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.remove('bi-star');
+                            s.classList.add('bi-star-fill');
+                            s.style.color = '#f59e0b';
+                        } else {
+                            s.classList.remove('bi-star-fill');
+                            s.classList.add('bi-star');
+                            s.style.color = '#e2e8f0';
+                        }
+                    });
+                    const texts = {1:'سيء جداً',2:'سيء',3:'مقبول',4:'جيد',5:'ممتاز'};
+                    document.getElementById('ratingText').textContent = texts[rating] || '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
